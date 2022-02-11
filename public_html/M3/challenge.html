@@ -8,13 +8,21 @@
         window.addEventListener("load", () => {
             console.log("loaded via javascript");
             //TODO: add any extra onload processing you may need here
+            let allNav = document.querySelectorAll("nav ul li a");
+            for (let i = 0; i < allNav.length; i++) {
+                allNav[i].setAttribute("onclick", "getCurrentSelection();");
+            }
+            
         });
         function getCurrentSelection() {
             setTimeout(() => {
                 //added this delay here as some solutions may require it to update properly (i.e., click code may complete before the navigation changes)
-                //TODO: add code for processing the current selection 
-
+                //TODO: add code for processing the current selection
+                let text = window.location.href.slice(window.location.href.indexOf("#")+1);
+                
                 //Note: likely you'll want to call updateCurrentPage towards the end
+                updateCurrentPage(text);
+                document.getElementsByTagName("title")[0].innerText = text;
             }, 100);
         }
     </script>
@@ -22,7 +30,7 @@
         /* TODO: make edits here */
         nav {
             background-color: rgb(115, 201, 252);
-            padding: 2em;
+            padding: 1em;
         }
         nav ul li {
             display: inline;
@@ -35,7 +43,16 @@
         }
 
         nav ul li a {
+            text-decoration: none;
             font-size: 24px;
+            text-transform: capitalize;
+        }
+        nav + h1 {
+            text-transform: capitalize;
+        }
+
+        ul li ul {
+            list-style-type: '\2713';
         }
     </style>
     <!-- make the necessary edits above this line -->
