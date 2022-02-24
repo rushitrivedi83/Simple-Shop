@@ -40,11 +40,17 @@
 		 $hasError = true;
 	 }
 	 //TODO 3: Sanitize email & Validate Email
-	 $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-	 if(!filter_var($email, FILTER_SANITIZE_EMAIL)) {
-		 echo "Email is invalid <br>";
-		 $hasError = true;
-	 }
+	   //$email = filter_var($email, FILTER_SANITIZE_EMAIL);
+	   $email = sanitize_email($email);
+	   //validate
+	   // if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	   //     echo "Invalid email address";
+	   //     $hasError = true;
+	   // }
+	   if (!is_valid_email($email)) {
+		   echo "Invalid email address";
+		   $hasError = true;
+	   }
 
 	 if(empty($password)) {
 		echo "Password must be set <br>";
