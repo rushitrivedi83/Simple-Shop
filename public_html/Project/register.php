@@ -13,11 +13,11 @@ reset_session();
     </div>
     <div>
         <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="3" />
+        <input type="password" id="pw" name="password" required minlength="8" />
     </div>
     <div>
         <label for="confirm">Confirm</label>
-        <input type="password" name="confirm" required minlength="3" />
+        <input type="password" name="confirm" required minlength="8" />
     </div>
     <input type="submit" value="Register" />
 </form>
