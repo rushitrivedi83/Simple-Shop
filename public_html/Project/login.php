@@ -8,7 +8,7 @@ require(__DIR__ . "/../../partials/nav.php");
     </div>
     <div>
         <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
+        <input type="password" id="pw" name="password" required minlength="8"/>
     </div>
     <input type="submit" value="Login" />
 </form>
@@ -16,10 +16,28 @@ require(__DIR__ . "/../../partials/nav.php");
     function validate(form) {
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
-
+        
+        let isValid = true
+        if(form.password.value.length < 8) {
+            flash("Please enter a password greater than 8 characters", "warning")
+            isValid = false;
+        }
+    
+        
         //TODO update clientside validation to check if it should
         //valid email or username
-        return true;
+        if(form.email.value.includes('@')) {
+           if(!form.email.value.match( /(.+)@(.+){2,}\.(.+){2,}/g)) {
+                flash("Please enter a valid email", "warning");
+                isValid = false; 
+           }
+        } else {
+            if(!form.email.value.match( /[a-z_-]{3,16}/g)) {
+                flash("Please enter a valid username", "warning");
+                isValid = false;
+            }
+        }
+        return isValid;
     }
 </script>
 <?php

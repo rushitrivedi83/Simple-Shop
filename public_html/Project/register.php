@@ -13,11 +13,11 @@ reset_session();
     </div>
     <div>
         <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
+        <input type="password" id="pw" name="password" required minlength="3" />
     </div>
     <div>
         <label for="confirm">Confirm</label>
-        <input type="password" name="confirm" required minlength="8" />
+        <input type="password" name="confirm" required minlength="3" />
     </div>
     <input type="submit" value="Register" />
 </form>
@@ -25,8 +25,30 @@ reset_session();
     function validate(form) {
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
+        let isValid = true
+        //validate email
+        if(!form.email.value.match( /(.+)@(.+){2,}\.(.+){2,}/g)) {
+            flash("Please enter a valid email", "warning");
+            isValid = false; 
+        }
+        //validate username
+        if(!form.username.value.match( /[a-z_-]{3,16}/g)) {
+            flash("Please enter a valid username", "warning");
+            isValid = false;
+        }
 
-        return true;
+        //validate password length
+        if(form.password.value.length < 8 || form.confirm.value.length < 8) {
+            flash("Please enter a password greater than 8 characters", "warning");
+            isValid = false;
+        }
+        //validate both passowrd length matches
+        if(form.password.value != form.confirm.value) {
+            flash("Please enter matching passwords", "warning");
+            isValid = false;
+        }
+        
+        return isValid;
     }
 </script>
 <?php
