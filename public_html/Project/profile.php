@@ -53,7 +53,7 @@ if (isset($_POST["save"])) {
     $confirm_password = se($_POST, "confirmPassword", null, false);
     if (!empty($current_password) && !empty($new_password) && !empty($confirm_password)) {
         $hasError = false;
-        if (!is_valid_password($password)) {
+        if (!is_valid_password($current_password)) {
             flash("Password too short", "danger");
             $hasError = true;
         }
@@ -139,14 +139,18 @@ $username = get_username();
 
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
-        if(pw.length < 8) {
-            flash("Please enter a password greater than 8 characters", "warning")
-            isValid = false;
+
+        if(pw.length > 0) {
+            if(pw.length < 8) {
+                flash("Please enter a password greater than 8 characters", "warning")
+                isValid = false;
+            }
+            if (pw !== con) {
+                flash("Password and Confirm password must match", "warning");
+                isValid = false;
+            }
         }
-        if (pw !== con) {
-            flash("Password and Confirm password must match", "warning");
-            isValid = false;
-        }
+        
         return isValid;
     }
 </script>
