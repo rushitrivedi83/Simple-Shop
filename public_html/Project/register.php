@@ -2,25 +2,34 @@
 require(__DIR__ . "/../../partials/nav.php");
 reset_session();
 ?>
-<form onsubmit="return validate(this)" method="POST">
-    <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" required />
-    </div>
-    <div>
-        <label for="username">Username</label>
-        <input type="text" name="username" required maxlength="30" />
-    </div>
-    <div>
-        <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
-    </div>
-    <div>
-        <label for="confirm">Confirm</label>
-        <input type="password" name="confirm" required minlength="8" />
-    </div>
-    <input type="submit" value="Register" />
-</form>
+<div class = "form-container">
+    <form class="register-form" onsubmit="return validate(this)" method="POST">
+        <div>
+            <label for="email">Email</label>
+            <br>
+            <input type="email" name="email" required />
+        </div>
+        <div>
+            <label for="username">Username</label>
+            <br>
+            <input type="text" name="username" required maxlength="30" />
+        </div>
+        <div>
+            <label for="pw">Password</label>
+            <br>
+            <input type="password" id="pw" name="password" required minlength="8" />
+        </div>
+        <div>
+            <label for="confirm">Confirm</label>
+            <br>
+            <input type="password" name="confirm" required minlength="8" />
+        </div>
+        <input type="submit" value="Register" />
+    </form>
+
+    
+</div>
+
 <script>
     function validate(form) {
         //TODO 1: implement JavaScript validation

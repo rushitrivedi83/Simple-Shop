@@ -44,8 +44,9 @@ try {
 }
 
 ?>
-<h1>List Roles</h1>
-<form method="POST">
+
+<form class="list_roles_form" method="POST">
+    <h1>List Roles</h1>
     <input type="search" name="role" placeholder="Role Filter" />
     <input type="submit" value="Search" />
 </form>
