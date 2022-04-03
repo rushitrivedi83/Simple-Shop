@@ -93,27 +93,28 @@ if (isset($_POST["save"])) {
 $email = get_user_email();
 $username = get_username();
 ?>
-<form method="POST" onsubmit="return validate(this);">
+
+<form class="profile-form" method="POST" onsubmit="return validate(this);">
     <div class="mb-3">
-        <label for="email">Email</label>
+        <label for="email">Email</label> <br>
         <input type="email" name="email" id="email" value="<?php se($email); ?>" />
     </div>
     <div class="mb-3">
-        <label for="username">Username</label>
+        <label for="username">Username</label> <br>
         <input type="text" name="username" id="username" value="<?php se($username); ?>" />
     </div>
     <!-- DO NOT PRELOAD PASSWORD -->
-    <div>Password Reset</div>
+    <h3>Password Reset</h3>
     <div class="mb-3">
-        <label for="cp">Current Password</label>
+        <label for="cp">Current Password</label> <br>
         <input type="password" name="currentPassword" id="cp" />
     </div>
     <div class="mb-3">
-        <label for="np">New Password</label>
+        <label for="np">New Password</label> <br>
         <input type="password" name="newPassword" id="np" />
     </div>
     <div class="mb-3">
-        <label for="conp">Confirm Password</label>
+        <label for="conp">Confirm Password</label> <br>
         <input type="password" name="confirmPassword" id="conp" />
     </div>
     <input type="submit" value="Update Profile" name="save" />
@@ -138,6 +139,10 @@ $username = get_username();
 
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
+        if(pw.length < 8) {
+            flash("Please enter a password greater than 8 characters", "warning")
+            isValid = false;
+        }
         if (pw !== con) {
             flash("Password and Confirm password must match", "warning");
             isValid = false;

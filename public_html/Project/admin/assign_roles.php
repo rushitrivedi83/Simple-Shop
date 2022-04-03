@@ -69,8 +69,9 @@ if (isset($_POST["username"])) {
 
 
 ?>
-<h1>Assign Roles</h1>
-<form method="POST">
+
+<form class="assign_roles_form" method="POST">
+    <h1>Assign Roles</h1>
     <input type="search" name="username" placeholder="Username search" />
     <input type="submit" value="Search" />
 </form>
