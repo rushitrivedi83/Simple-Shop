@@ -17,7 +17,9 @@
 ### Proposal Checklist and Evidence
 
 - Milestone 1
-	* User will be able to register a new account
+	* [x] \(02/22/2022) User will be able to register a new account
+    	* Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+    	* Prod URL: [https://rat3-prod.herokuapp.com/Project/register.php](https://rat3-prod.herokuapp.com/Project/register.php)
 		* Form Fields
 			* Username, email, password, confirm password(other fields optional)
 			* Email is required and must be validated
@@ -30,7 +32,9 @@
 		* Username should be unique
 		* System should let user know if username or email is taken and allow the user to correct the error without wiping/clearing the form
 			* The only fields that may be cleared are the password fields
-	* User will be able to login to their account (given they enter the correct credentials)
+	* [x] \(02/24/2022) User will be able to login to their account (given they enter the correct credentials)
+        * Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+    	* Prod URL: [https://rat3-prod.herokuapp.com/Project/login.php](https://rat3-prod.herokuapp.com/Project/login.php)
 		* Form
 			* User can login with **email **or **username**
 				* This can be done as a single field or as two separate fields
@@ -40,27 +44,42 @@
 		* User will be directed to a landing page upon login
 			* This is a protected page (non-logged in users shouldn’t have access)
 			* This can be home, profile, a dashboard, etc
-	* User will be able to logout
+	* [x] \(03/01/2022) User will be able to logout
+        * Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+        * Prod URL: [https://rat3-prod.herokuapp.com/Project/logout.php](https://rat3-prod.herokuapp.com/Project/logout.php)
 		* Logging out will redirect to login page
 		* User should see a message that they’ve successfully logged out
 		* Session should be destroyed (so the back button doesn’t allow them access back in)
-	* Basic security rules implemented
+	* [x] \(03/31/2022) Basic security rules implemented
+        * Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/profile.php](https://rat3-prod.herokuapp.com/Project/profile.php) 
 		* Authentication:
 			* Function to check if user is logged in
 			* Function should be called on appropriate pages that only allow logged in users
 		* Roles/Authorization:
 			* Have a roles table (see below)
-	* Basic Roles implemented
+	* [x] \(03/31/2022) Basic Roles implemented
+        * Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/admin/create_role.php](https://rat3-prod.herokuapp.com/Project/admin/create_role.php) 
 		* Have a <span style="text-decoration:underline;">Roles</span> table	(id, name, description, is_active, modified, created)
 		* Have a <span style="text-decoration:underline;">User Roles</span> table (id, user_id, role_id, is_active, created, modified)
 		* Include a function to check if a user has a specific role (we won’t use it for this milestone but it should be usable in the future)
-	* Site should have basic styles/theme applied; everything should be styled
+	* [x] \(04/03/2022) Site should have basic styles/theme applied; everything should be styled
+        * Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/home.php](https://rat3-prod.herokuapp.com/Project/home.php)
+          * Prod Styles URL: [https://rat3-prod.herokuapp.com/Project/styles.css](https://rat3-prod.herokuapp.com/Project/styles.css)
 		* I.e., forms/input, navigation bar, etc
-	* Any output messages/errors should be “user friendly”
+	* [x] \(03/01/2022) Any output messages/errors should be “user friendly”
+        * Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/logout.php](https://rat3-prod.herokuapp.com/Project/logout.php)
 		* Any technical errors or debug output displayed will result in a loss of points
-	* User will be able to see their profile
+	* [x] \(03/03/2022) User will be able to see their profile
+		* Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/profile.php](https://rat3-prod.herokuapp.com/Project/profile.php) 
 		* Email, username, etc
-	* User will be able to edit their profile
+	* [x] \(03/03/2022) User will be able to edit their profile
+		* Link to related .md file: [Milestone1](https://github.com/rushitrivedi83/IT202-008/blob/Milestone1/public_html/Project/milestone1.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/profile.php](https://rat3-prod.herokuapp.com/Project/profile.php) 
 		* Changing username/email should properly check to see if it’s available before allowing the change
 		* Any other fields should be properly validated
 		* Allow password reset (only if the existing correct password is provided)
