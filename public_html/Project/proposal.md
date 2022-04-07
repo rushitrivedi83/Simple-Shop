@@ -1,5 +1,5 @@
-# Project Name: Simple Arcade
-## Project Summary: This project will create a simple Arcade with scoreboards and competitions based on the implemented game.
+# Project Name: Simple Shop
+## Project Summary: This project will create a simple e-commerce site for users. Administrators or store owners will be able to manage inventory and users will be able to manage their cart and place orders.
 ## Github Link: https://github.com/rushitrivedi83/IT202-008/tree/prod 
 ## Project Board Link: https://github.com/rushitrivedi83/IT202-008/projects/1 
 ## Website Link: https://rat3-prod.herokuapp.com/Project/ 
@@ -84,7 +84,6 @@
 		* Any other fields should be properly validated
 		* Allow password reset (only if the existing correct password is provided)
 			* Hint: logic for the password check would be similar to login
-
 - Milestone 2
 	* User with an admin role or shop owner role will be able to add products to inventory
 		 * Table should be called Products (id, name, description, category, stock, created, modified, unit_price, visibility [true, false])
@@ -120,87 +119,6 @@
 		* A negative Quantity is not valid
 	* User will be able to remove a single item from their cart via button click
 	* User will be able to clear their entire cart via a button click
-
-- Milestone 3:
-	* User will be able to purchase items in their Cart
-		* Create an Orders table (id, user_id, created, total_price, address, payment_method, money_received)
-			* Payment method will simply record (Cash, Visa, MasterCard, Amex, etc) We will not be recording CC numbers or anything of that nature, this is just a sample and in real world projects you’d commonly use a third party payment processor
-			* Hint: This must be inserted first before you can insert into the OrderItems table
-		* Create an OrderItems table (id, order_id, product_id, quantity, unit_price)
-			* Hint: This is basically a copy of the data from the Cart table, just persisted as a purchase
-		* Checkout Form
-			* Ask for payment method (Cash, Visa, MasterCard, Amex, etc)
-			* Do not ask for credit card number, this is just a sample
-			* Ask for a numerical value to be entered 
-				* Note: this will be a fake payment check to compare against the cart total to determine if the payment succeeds
-				* This will be recorded as money_received
-			* Ask for Address/shipping information
-				* You’ll need to concatenate this into a single string to insert into the DB
-        * User will be asked for their Address for shipping purposes
-    		* Address form should validate correctly
-        		* Use this as a rough guide (likely you’ll want to prefill some of the data you already have about the user)
-
-		* Order process (comment each part of the process):
-			* Calculate Cart Items
-			* Verify the current product price against the Products table
-				* Since our Cart is table-based it can be long lived so if a user added a Product at a sale and they attempt to purchase afterwards, it should pull the true Product cost.
-				* You can also show the Cart.unit_price vs Product.unit_price to show a sale or an increase in price
-			* Verify desired product and desired quantity are still available in the Products table
-				* Users can’t purchase more than what’s in stock
-				* Show an error message and prevent order from going through if something isn’t available
-				* Let the user update their cart and try again
-				* Clearly show what the issue is (which product isn’t available, how much quantity is available if the cart exceeds it)
-			* Make an entry into the Orders table
-			* Get last Order ID from Orders table
-			* Copy the cart details into the OrderItems tables with the Order ID from the previous step
-			* Update the Products table Stock for each item to deduct the Ordered Quantity
-			* Clear out the user’s cart after successful order
-			* Redirect user to Order Confirmation Page
-	* Order Confirmation Page
-		* Show the entire order details from the Order and OrderItems table (similar to cart)
-			* Including a the cost of each line item and the total value
-			* Show how they purchased and how much they paid
-		* Displays a Thank you message
-	* User will be able to see their Purchase History
-		* For now limit to 10 most recent orders
-		* Show a summary of relevant information
-		* Ask list item can be clicked to view the full details in the Order Details Page (similar to Order Confirmation Page except no “Thank you” message)
-	* Store Owner will be able to see all Purchase History
-		* For now limit to 10 most recent orders
-		* A list item can be clicked to view the full details in the Order Details Page (similar to Order Confirmation Page except no “Thank you” message)
-- Milestone 4:
-	* User can set their profile to be public or private (will need another column in Users table)
-		* If profile is public, hide email address from other users (email address should not be publicly visible to others)
-	* User will be able to rate a product they purchased
-		* Create table called Ratings (id, product_id, user_id, rating, comment, created, modified)
-		* 1-5 rating
-		* Text Comment (use TEXT data type in sql)
-		* Must be done on the Product Details Page
-		* Ratings and Rating Comments will be visible on the Product Details page
-			* Show the latest 10 reviews
-			* Paginate anything beyond 10
-		* Show the average rating on the Product Details Page
-	* User’s Purchase History Changes
-		* Filter by date range
-		* Filter by category
-		* Sort by total, date purchased, etc
-		* Add pagination
-			* Any filter/sort applied must be followed during the pagination process
-	* Store Owner Purchase History Changes
-		* Filter by Date Range
-		* Filter by Category
-		* Sort by total, date purchased, etc
-		* Add pagination
-			* Any filter/sort applied must be followed during the pagination process
-		* The result page should show the accurate total price of the combined search results (i.e., if just 3 records show each of $25, it should show $75 total for this view)
-	* Add pagination to Shop Page (and any other product lists not yet mentioned)
-	* Store Owner will be able to see all products out of stock
-		* This will be added as a filter to their product list page from Milestone 2
-		* Pagination should account for this new filter
-		* Recommended to have the filter applied as a given value (i.e., where quantity is <= value)
-	* User can sort products by average rating on the Shop Page
-		* Hint: may want to add an “average rating” field to the Products table and update this value any time a new rating is given for the product using an aggregate function
-
 ### Intructions
 #### Don't delete this
 1. Pick one project type
