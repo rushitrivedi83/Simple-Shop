@@ -4,6 +4,7 @@ reset_session();
 ?>
 <div class = "form-container">
     <form class="register-form" onsubmit="return validate(this)" method="POST">
+        <h2 style="padding-bottom: 20px"> Register </h2>
         <div>
             <label for="email">Email</label>
             <br>
