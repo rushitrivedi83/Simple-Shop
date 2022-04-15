@@ -3,9 +3,18 @@ require(__DIR__ . "/../../partials/nav.php");
 
 $results = [];
 $db = getDB();
+//get all categories
+$stmt = $db->prepare("SELECT DISTINCT category from Products");
+$stmt->execute();
+$categories = $stmt->fetchAll();
+
+
 //process filters/sorting
 //Sort and Filters
 $col = se($_GET, "col", "unit_price", false);
+$cat = se($_GET, "category", "all", false);
+
+
 //allowed list
 if (!in_array($col, ["unit_price", "stock", "name", "created"])) {
     $col = "unit_price"; //default value, prevent sql injection
@@ -22,8 +31,14 @@ $name = se($_GET, "name", "", false);
 $base_query = "SELECT id, name, description, unit_price, stock, category, image FROM Products";
 $total_query = "SELECT count(1) as total FROM Products";
 //dynamic query
-$query = " WHERE 1=1 and stock > 0"; //1=1 shortcut to conditionally build AND clauses
+$query = " WHERE 1=1 and stock > 0 and visibility > 0"; //1=1 shortcut to conditionally build AND clauses
 $params = []; //define default params, add keys as needed and pass to execute
+
+//apply category filter
+if(!empty($cat) && $cat != "all") {
+    $query .= " AND category = :category";
+    $params[":category"] = $cat; 
+} 
 //apply name filter
 if (!empty($name)) {
     $query .= " AND name like :name";
@@ -36,25 +51,7 @@ if (!empty($col) && !empty($order)) {
 //paginate function
 $per_page = 3;
 paginate($total_query . $query, $params, $per_page);
-//get the total
-/* this comment block has been replaced by paginate()
-//get the total
-$stmt = $db->prepare($total_query . $query);
-$total = 0;
-try {
-    $stmt->execute($params);
-    $r = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($r) {
-        $total = (int)se($r, "total", 0, false);
-    }
-} catch (PDOException $e) {
-    flash("<pre>" . var_export($e, true) . "</pre>");
-}
-//apply the pagination (the pagination stuff will be moved to reusable pieces later)
-$page = se($_GET, "page", 1, false); //default to page 1 (human readable number)
-$per_page = 3; //how many items to show per page (hint, this could also be something the user can change via a dropdown or similar)
-$offset = ($page - 1) * $per_page;
-end commented out coded moved to paginate()*/
+
 $query .= " LIMIT :offset, :count";
 $params[":offset"] = $offset;
 $params[":count"] = $per_page;
@@ -104,7 +101,7 @@ try {
             <div class="input-group">
                 <div class="input-group-text">Sort</div>
                 <!-- make sure these match the in_array filter above-->
-                <select class="form-control bg-info" name="col" value="<?php se($col); ?>" data="took">
+                <select class="form-control bg-info" style="width: auto" name="col" value="<?php se($col); ?>" data="took">
                     <option value="unit_price">Cost</option>
                     <option value="stock">Stock</option>
                     <option value="name">Name</option>
@@ -115,7 +112,7 @@ try {
                     //value setting only works after the options are defined and php has the value set prior
                     document.forms[0].col.value = "<?php se($col); ?>";
                 </script>
-                <select class="form-control" name="order" value="<?php se($order); ?>">
+                <select class="form-control" style="width:auto" name="order" value="<?php se($order); ?>">
                     <option class="bg-white" value="asc">Up</option>
                     <option class="bg-white" value="desc">Down</option>
                 </select>
@@ -129,6 +126,21 @@ try {
                         document.forms[0].order.className = "form-control bg-danger";
                     }
                 </script>
+
+                <!--- Select categories -->
+                <select class="form-control bg-light" style="width:auto" name="category" value="<?php se($cat);?>">
+                    <option value="all">All</option>
+                    <?php foreach($categories as $category):?>
+                        <option value="<?php se($category, 'category');?>">
+                            <?php se($category, 'category');?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <script data="this">
+                    document.forms[0].category.value = "<?php se($cat); ?>";
+                </script>
+
+
             </div>
         </div>
         <div class="col">
