@@ -164,7 +164,7 @@ try {
                             <?php endif; ?>
 
                             <div class="card-body">
-                                <h5 class="card-title">Name: <?php se($item, "name"); ?></h5>
+                                <a href= "product.php?id=<?php se($item, "id"); ?>" class="card-title"> <p class="card-title">Name: <?php se($item, "name"); ?> </p> </a>
                                 <p class="card-text">Description: <?php se($item, "description"); ?></p>
                             </div>
                             <div class="card-footer">

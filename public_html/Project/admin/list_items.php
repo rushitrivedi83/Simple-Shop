@@ -48,7 +48,12 @@ if (isset($_POST["itemName"])) {
                 <?php endif; ?>
                 <tr>
                     <?php foreach ($record as $column => $value) : ?>
-                        <td><?php se($value, null, "N/A"); ?></td>
+                        <?php if ($column != "name"): ?>
+                            <td><?php se($value, null, "N/A"); ?></td>
+                        <?php endif; ?>
+                        <?php if ($column == "name"): ?>
+                            <td> <a  href= "<?php se($BASE_PATH) ?>/product.php?id=<?php se($record, "id"); ?>"> <?php se($value, null, "N/A"); ?> </a></td>
+                        <?php endif; ?>
                     <?php endforeach; ?>
 
 
