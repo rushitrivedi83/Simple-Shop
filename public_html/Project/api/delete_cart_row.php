@@ -8,17 +8,18 @@ $user_id = get_user_id();
 
 $response = ["status" => 400, "message" => "Unhandled error"];
 http_response_code(400);
-if ($user_id > 0) {
+$line_id = se($_REQUEST, "line_id", 0, false);
+if ($user_id > 0 && $line_id > 0) {
     $db = getDB();
-    $stmt = $db->prepare("DELETE FROM Cart where user_id = :uid");
+    $stmt = $db->prepare("DELETE FROM Cart where id = :id and :uid");
     try {
         //added user_id to ensure the user can only delete their own items
-        $stmt->execute([":uid" => $user_id]);
+        $stmt->execute([":id" => $line_id, ":uid" => $user_id]);
         $response["status"] = 200;
-        $response["message"] = "Deleted entire cart";
+        $response["message"] = "Deleted line item";
         http_response_code(200);
     } catch (PDOException $e) {
-        error_log("Error deleting the cart: " . var_export($e, true));
+        error_log("Error deleting line item: " . var_export($e, true));
         $response["message"] = "Error deleting item";
     }
 }

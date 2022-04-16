@@ -55,6 +55,7 @@
                     `
                 <td colspan="100%">
                 <button class="btn btn-primary" onclick="purchase_cart()">Purchase</button>
+                <button class="btn btn-secondary" onclick="deleteEntireCart()">Clear Cart</button>
                 </td>
                 `;
                 body.appendChild(row);
@@ -83,13 +84,23 @@
         console.log("delete ele", ele);
         postData({
             line_id: line_id
-        }, "/Project/api/delete_cart.php").then(data => {
+        }, "/Project/api/delete_cart_row.php").then(data => {
             console.log(data);
             //lazily assuming it worked and removing from the DOM
             //you'd ideally want to check to be sure if using a similar process
             //ele.closest("tr").remove();
             //turns out since I have total shown I need to recalculate that, and I'm lazy so instead...
             //I'll refresh the full cart
+            if (get_cart) {
+                get_cart();
+            }
+        });
+    }
+
+    function deleteEntireCart() {
+        console.log("deleting cart");
+        postData({}, "/Project/api/delete_cart.php").then(data => {
+            console.log(data);
             if (get_cart) {
                 get_cart();
             }
