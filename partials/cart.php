@@ -27,8 +27,9 @@
                         <td>
                         ${r.name}
                         </td>
-                        <td>
-                        ${r.desired_quantity}
+                        <td style="width:100px">
+                            <input class="form-control quantityChange" onfocusout = "changeQuantity(${r.line_id}, this)" type="text" value="${r.desired_quantity}"></input>
+                        
                         </td>
                         <td>
                         $${ parseFloat(r.unit_price).toFixed(2) }
@@ -85,6 +86,37 @@
         postData({
             line_id: line_id
         }, "/Project/api/delete_cart_row.php").then(data => {
+            console.log(data);
+            //lazily assuming it worked and removing from the DOM
+            //you'd ideally want to check to be sure if using a similar process
+            //ele.closest("tr").remove();
+            //turns out since I have total shown I need to recalculate that, and I'm lazy so instead...
+            //I'll refresh the full cart
+            if (get_cart) {
+                get_cart();
+            }
+        });
+    }
+
+    function changeQuantity (line_id, ele) {
+        var changedQuantity = ele.value;
+        console.log("Value for row " + line_id + " changed to " + changedQuantity)
+
+        if(changedQuantity < 0) {
+            flash("Please Select a Quantity > 0", "danger");
+            if (get_cart) {
+                get_cart();
+            }
+            return
+
+        } if (changedQuantity == 0) {
+            deleteLineItem(line_id, ele);
+            return
+        }
+        postData({
+            line_id: line_id,
+            new_Quantity: changedQuantity
+        }, "/Project/api/update_quantity.php").then(data => {
             console.log(data);
             //lazily assuming it worked and removing from the DOM
             //you'd ideally want to check to be sure if using a similar process

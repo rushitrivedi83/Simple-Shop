@@ -61,3 +61,8 @@ body{
     background-color: #F8F0E3;
 
 }
+
+.quantityChange {
+    width: 50%;
+    margin: 1px;
+}
