@@ -7,18 +7,27 @@ if (session_status() != PHP_SESSION_ACTIVE) {
     session_start();
 }
 //handle the potentially incoming post request
-$product_id = (int)se($_POST, "item_id", null, false);
+$product_id = (int)se($_POST, "product_id", null, false);
 $desired_quantity = (int)se($_POST, "desired_quantity", 0, false);
 $response = ["status" => 400, "message" => "Invalid data"];
 // http_response_code(400);
 if (isset($product_id) && $desired_quantity > 0) {
     if (is_logged_in()) {
         $db = getDB();
+        //Get the item price
+        $stmt = $db->prepare("SELECT unit_price FROM Products WHERE id = :product_id LIMIT 1");
+        $stmt->bindValue(":product_id", $product_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
         //note adding to cart doesn't verify price or quantity
-        $stmt = $db->prepare("INSERT INTO Cart (product_id, desired_quantity, user_id) VALUES(:iid, :q, :uid) ON DUPLICATE KEY UPDATE desired_quantity = desired_quantity + :q");
+        $stmt = $db->prepare("INSERT INTO Cart (product_id, desired_quantity, user_id, unit_price) VALUES(:iid, :q, :uid, :unit_price) ON DUPLICATE KEY UPDATE desired_quantity = desired_quantity + :q");
         $stmt->bindValue(":iid", $product_id, PDO::PARAM_INT);
         $stmt->bindValue(":q", $desired_quantity, PDO::PARAM_INT);
         $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
+        $stmt->bindValue(":unit_price", $results[0]["unit_price"]);
+        
         try {
             $stmt->execute();
             $response["status"] = 200;
