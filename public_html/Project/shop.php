@@ -78,27 +78,12 @@ try {
 }
 ?>
 <script>
-     function add_to_cart(item_id, quantity = 1) {
-        postData({
-            item_id: item_id,
-            desired_quantity: quantity
-        }, "/Project/api/add_to_cart.php").then(data => {
-            if (data.status === 200) {
-                flash(data.message, "success");
-            } else {
-                flash(data.message, "danger");
-            }
-        }).catch(e => {
-            console.log(e)
-            flash(`There was a problem adding the item to cart ${e}`, "danger");
-        });
-    }
-
     function purchase(item) {
         console.log("TODO purchase item", item);
         //alert("It's almost like you purchased an item, but not really");category
-        add_to_cart(item);
-
+        if(add_to_cart) {
+            add_to_cart(item);
+        }
     }
 </script>
 
