@@ -79,6 +79,23 @@
         })
     }
 
+    function deleteLineItem(line_id, ele) {
+        console.log("delete ele", ele);
+        postData({
+            line_id: line_id
+        }, "/Project/api/delete_cart.php").then(data => {
+            console.log(data);
+            //lazily assuming it worked and removing from the DOM
+            //you'd ideally want to check to be sure if using a similar process
+            //ele.closest("tr").remove();
+            //turns out since I have total shown I need to recalculate that, and I'm lazy so instead...
+            //I'll refresh the full cart
+            if (get_cart) {
+                get_cart();
+            }
+        });
+    }
+
 	function add_to_cart(product_id, quantity = 1) {
         postData({
             product_id: product_id,
