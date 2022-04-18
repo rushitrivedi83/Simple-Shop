@@ -1,5 +1,5 @@
-# Project Name: Simple Arcade
-## Project Summary: This project will create a simple Arcade with scoreboards and competitions based on the implemented game.
+# Project Name: Simple Shop
+## Project Summary: This project will create a simple e-commerce site for users. Administrators or store owners will be able to manage inventory and users will be able to manage their cart and place orders.
 ## Github Link: https://github.com/rushitrivedi83/IT202-008/tree/prod 
 ## Project Board Link: https://github.com/rushitrivedi83/IT202-008/projects/1 
 ## Website Link: https://rat3-prod.herokuapp.com/Project/ 
@@ -84,116 +84,63 @@
 		* Any other fields should be properly validated
 		* Allow password reset (only if the existing correct password is provided)
 			* Hint: logic for the password check would be similar to login
-
 - Milestone 2
-	* Pick a simple game to implement, anything that generates a score that’s more advanced than a simple random number generator (may build off of a sample from the site shared in class for the HTML5 HW)
-		* What game will you be doing?
-			* **[game]**
-		* Briefly describe it.
-			* **[describe]**
-		* **Note**: For this milestone the game doesn’t need to be complete, just have something basic or a placeholder that can generate a score when played.
-	* The system will save the user’s score at the end of the game only if the user is logged in
-		* There should be a <span style="text-decoration:underline;">Scores</span> table (id, user_id, score, created, modified)
-		* Each received score should be a new entry (scores will not be updated)
-			* Please let me know if your project expects a running total score
-	* The user will be able to see their last 10 scores
-		* Shown on their profile page
-		* Ordered by most recent
-	* Create function(s) that output the following scoreboards
-		* Top 10 Weekly
-		* Top 10 Monthly
-		* Top 10 Lifetime
-		* Scoreboards should show no more than 10 results; if there are no results a proper message should be displayed (i.e., “No [time period] scores to display”)
-	* Create a Homepage (index.php)
-		* Include a weekly, monthly, and lifetime scoreboard
-			* Scoreboards will show username, score, timestamp of when the score was received
-			* You may manually edit some score entries in the database to show proof each scoreboard output works
-		* Include a link to the game
-		* Include a description of your project/game
-		* Include a proper heading
-
-- Milestone 3
-	* Users will have credits associated with their account.
-		* Alter the User table to include credits with a default of 0.
-			* This field must not be incremented/decremented directly, you must use the CreditHistory table to calculate it and set it each time the credits change (hint: using SQL sum())
-		* Credits should show on the user’s profile page
-			* You may show credits elsewhere _as well_ if you wish
-	* Create a <span style="text-decoration:underline;">CreditsHistory</span> table (id, user_id, credit_diff, reason, created)
-		* Any new entry should update the user’s credits value (do not update the User credits column directly)
-			* SUM the credit_diff for the user_id to get the total
-	* <span style="text-decoration:underline;">Competitions</span> table should have the following columns (id, name, duration, expires (value = now + duration), current_reward, starting_reward, join_fee, current_participants, min_participants, paid_out (boolean default false), did_calc (boolean default false), min_score, first_place_per, second_place_per, third_place_per, cost_to_create, created_by (user_id ref), created, modified)
-	* User will be able to create a competition
-		* Competitions will start at 1 credit (reward)
-		* User sets a name for the competition
-		* User determines % given for 1st, 2nd, and 3rd place winners
-			* Combination must be equal to 100% (no more, no less)
-		* User determines if it’s free to join or the cost to join (min 0 for free)
-		* User determines the duration of the competition (in days)
-		* User can determine the minimum score to qualify (min 0)
-		* User determines minimum participants for payout (min 3)
-		* Show any user friendly error messages
-		* Show user friendly confirmation message that competition was created
-		* The cost to the creator of the competition will be (1 + starting reward value)
-			* If they can’t afford it, the competition should not be created
-			* If they can afford it, automatically add them to the competition as a participant but don’t trigger the Reward increase in the following step
-	* Each new participant causes the Reward value to increase by 50% of the joining fee rounded up (i.e., at least 1)
-		* This should be an equation based on number of participants, do not just increment the reward value (this is repeated below as well)
-	* Have a page where the User can see active competitions (not expired)
-		* For this milestone limit the output to a maximum of 10
-		* Order the results by soonest to expire
-	* Will need an association table <span style="text-decoration:underline;">CompetitionParticipants</span> (id, comp_id, user_id, created, modified)
-		* Comp_id and user_id should be a composite unique key (user can only join a competition once)
-	* User can join active competitions 
-		* Creates an entry in CompetitionParticipants
-		* Recalculate the Competitions.participants value based on the count of participants for this competition from the CompetitionParticipants table.
-		* Update the Competitions.reward based on the # of participants and the appropriate math from the competition requirements above
-			* Best to do this based on a simple equation via the initial Competition data and participants
-			* Do not just increment the reward
-		* Show proper error message if user is already registered
-		* Show proper confirmation if user registered successfully
-	* Create function that calculates competition winners (clearly comment each step in the code)
-		* Get all expired and not paid_out and not did_calc competitions (limit to 10 at a time)
-		* For each competition
-			* Compare the participant count against the minimum required
-			* Get the top 3 winners
-				* **Pick 1 (strike out the option you won’t do; do not delete):**
-					* **Option 1: **Scores are calculated by the sum of the score from the Scores table where it was earned/created between Competition start and Competition expires timestamps
-					* **Option 2: **Where the individual score was earned/created between when the user joined the competition and when the Competition expires
-			* Calculate the payout (reward * place_percent)
-				* Round up the value (it’s ok to pay out an extra credit here and there)
-			* Create entries for the Users in the CreditsHistory table
-				* Apply the new values (SUM) to their credits column in the Users table after entry is added
-				* Reason should be recorded as “Won {credits} credits for {place} place in Competition {name}”
-			* Mark the competition as paid_out = true and did_calc = true
-		* Mark all invalid competitions as did_calc = true (i.e., where # of participants is less than the minimum)
-
-- Milestone 4
-	* User can set their profile to be public or private (will need another column in Users table)
-		* If profile is public, hide email address from **other** users (email address should not be publicly visible to others)
-	* User will be able to see their competition history
-		* Limit to 10 results
-		* Paginate anything after 10
-		* If no results, show the appropriate message
-		* Show the competition name, participant count, reward, the expiry date if active otherwise “expired”, whether or not they are the creator
-	* User with the role of “admin” can edit a competition where paid_out = false
-		* They can adjust any of the regular form values
-		* If the competition was expired they can update the duration to include extra time
-	* Add pagination to the Active Competitions view
-		* Show 10 competitions per page
-		* Paginate anything after 10
-		* If no results, show the appropriate message
-	* Anywhere a username is displayed should link to that user’s profile
-		* This includes all scoreboards (i.e., Homepage, etc)
-		* If the profile is private you can have the page just display “this profile is private” upon access
-	* Viewing an active or expired competition should show the top 10 scoreboard related to that competition
-		* **Note**: This scoreboard is only the scores related to the competition and not the same type of scoreboard as the Homepage
-	* Game should be fully implemented/completed by this point
-		* Game should tell the player if they’re not logged in that their score will not be recorded.
-	* User’s score history will include pagination
-		* Show latest 10
-		* Paginate after 10
-		* Show appropriate message for no results
-
+	* [x] \(04/14/2022) User with an admin role or shop owner role will be able to add products to inventory
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/admin/add_item.php](https://rat3-prod.herokuapp.com/Project/admin/add_item.php) 
+		* Table should be called Products (id, name, description, category, stock, created, modified, unit_price, visibility [true, false])
+	* [x] \(04/15/2022) Any user will be able to see products with visibility = true on the Shop page
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
+		* Product list page will be public (i.e. doesn’t require login)
+		* For now limit results to 10 most recent
+		* User will be able to filter results by category
+		* User will be able to filter results by partial matches on the name
+		* User will be able to sort results by price
+		* All filters are additive
+	* [x] \(04/15/2022) Admin/Shop owner will be able to see products with any visibility
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/admin/list_items.php](https://rat3-prod.herokuapp.com/Project/admin/list_items.php) 
+		* This should be a separate page from Shop, but will be similar
+		* This page should only be accessible to the appropriate role(s)
+	* [x] \(04/15/2022) Admin/Shop owner will be able to edit any product
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/admin/edit_item.php?id=1](https://rat3-prod.herokuapp.com/Project/admin/edit_item.php?id=1) 
+		* Edit button should be accessible for the appropriate role(s) anywhere a product is shown (Shop list, Product Details Page, etc)
+		* Edit name, description, category, stock, unit_price, visibility
+	* [x] \(04/15/2022) User will be able to click an item from a list and view a full page with more info about the item (Product Details Page)
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/product.php?id=3](https://rat3-prod.herokuapp.com/Project/product.php?id=3) 
+		* Name, description, unit_price, stock, category
+	* [x] \(04/16/2022) User must be logged in for any Cart related activity below
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
+	* [x] \(04/16/2022) User will be able to add items to Cart
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
+		* Cart will be table-based (id, product_id, user_id, desired_quantity, unit_price, created, modified)
+			* Choose one and cross out which one you won’t support
+				* If a user can have only 1 cart product_id and user_id should be a composite unique key
+				* If a user can have more than 1 cart, add a field called cart_id and cart_id, user_id, and product_id will be a composite unique key
+		* Adding items to Cart will not affect the Product's quantity in the Products table
+	* [x] \(04/16/2022) User will be able to see their cart
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
+		* List all the items
+		* Show subtotal for each line item based on desired_quantity * unit_price (from the cart)
+		* Show total cart value (sum of line item subtotals)
+		* Will be able to click an item to see more details (Product Details Page)
+	* [x] \(04/16/2022) User will be able to change quantity of items in their cart
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
+		* Quantity of 0 should also remove from cart
+		* A negative Quantity is not valid
+	* [x] \(04/16/2022) User will be able to remove a single item from their cart via button click
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
+	* [x] \(04/16/2022) User will be able to clear their entire cart via a button click
+        * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
 ### Intructions
 #### Don't delete this
 1. Pick one project type
