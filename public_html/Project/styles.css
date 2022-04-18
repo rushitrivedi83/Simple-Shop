@@ -1,54 +1,15 @@
 
-.alert-success {
-    background-color: green;
-    padding: 0.5em;
-    font-weight: 500;
-    color: white;
-    border-radius: 4px;
-}
-
-.alert-warning {
-    background-color: yellow;
-    padding: 0.5em;
-    font-weight: 500;
-    border-radius: 4px;
-}
-
-.alert-danger {
-    background-color: red;
-    padding: 0.5em;
-    font-weight: 500;
-    border-radius: 4px;
-}
-
-.alert-info {
-    background-color: teal;
-    padding: 0.5em;
-    font-weight: 500;
-    color: white;
-    border-radius: 4px;
-}
 /* Styling the navigation */
-nav {
+
+nav ul li a{
+    font-size: "30px";
+}
+.navbar {
+    padding:0em;
+}
+.navbar .container-fluid {
     background-color: rgb(115, 201, 252);
-    padding: 1em;
-}
-nav ul li {
-    display: inline;
-    padding: 14px 16px;
-}
-
-nav ul li a:hover {
-    color: white;
-}
-
-nav ul li a {
-    text-decoration: none;
-    font-size: 24px;
-    text-transform: capitalize;
-}
-nav + h1 {
-    text-transform: capitalize;
+    padding: 1.5em
 }
 
 /* Making the login and register page forms */
@@ -64,7 +25,7 @@ nav + h1 {
 }
 
 /* Styling input elements on the register and login and profile page and create Role Page */
-.login-form input, .register-form input, .profile-form input, .create-role-form input, .list_roles_form input[type="search"], .assign_roles_form input[type="search"]{
+.login-form input, .register-form input{
     width: 30%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -75,65 +36,11 @@ nav + h1 {
 }
 
 /* Stying the login and register and profile and create role andbuttons*/
-.login-form input[type="submit"], .register-form input[type="submit"], .profile-form input[type="submit"], .create-role-form input[type="submit"]{
+.login-form input[type="submit"], .register-form input[type="submit"]{
     cursor: pointer;
     background-color: rgb(115, 201, 252);
     color: white;
     font-weight: bold;
-}
-
-/* List Roles Search Button */
-.list_roles_form input[type="submit"], .assign_roles_form input[type="submit"], input[value="Toggle Roles"]{
-    width: 10%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; 
-    cursor: pointer;
-}
-
-/*toggle roles button and Toggle button on List Roles styles */
-input[value="Toggle Roles"] {
-    margin-left: 2em;
-}
-
-input[value="Toggle"] {
-    width: 90%;
-    padding: 12px 20px;
-    margin: 8px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; 
-    cursor: pointer;
-}
-
-
-/* padding the pages for a user */
-.profile-form, .create-role-form, .list_roles_form, .assign_roles_form{
-    margin-top:2em;
-    margin-left: 2em;
-}
-
-/*Styling description box for create role page */
-.create-role-form textarea {
-    width: 30%;
-    height: 150px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    font-size: 16px;
-    resize: none;
-}
-
-/* Stying labels of the form elements */ 
-.create-role-form label{
-    font-weight: bold;
-    font-size: 18px;
 }
 
 .login-form label, .register-form label, .profile-form label {
@@ -141,17 +48,8 @@ input[value="Toggle"] {
     font-size: 16px;
 }
 
-/* Styling tables */
-table {
-    margin:2em;
-    margin: 2em; 
-}
-table, th, td {
-    border: 1px solid;
-    border-collapse: collapse;
-  }
-td {
-    padding: 1em
+.container-fluid {
+    padding: 1em;
 }
 
 
@@ -159,7 +57,12 @@ td {
 body{
     /* background-color: hotpink;
     color: rgb(153, 0, 153); */
-    margin: 0px;
+   
     background-color: #F8F0E3;
 
+}
+
+.quantityChange {
+    width: 50%;
+    margin: 1px;
 }
