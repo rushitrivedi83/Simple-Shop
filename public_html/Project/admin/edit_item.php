@@ -52,7 +52,17 @@ function map_column($col)
             <?php if (!in_array($column, $ignore)) : ?>
                 <div class="mb-4">
                     <label class="form-label" for="<?php se($column); ?>"><?php se($column); ?></label>
+                    <?php if ($column !== "visibility"): ?>
                     <input class="form-control" id="<?php se($column); ?>" type="<?php echo map_column($column); ?>" value="<?php se($value); ?>" name="<?php se($column); ?>" />
+                    <?php endif;?>
+                    <?php if ($column === "visibility"): ?>
+                        <br>
+						<input  class="form-check-input" type="radio" id="visibilityT" name="visibility" value="1">
+						<label class="form-label" for="visibilityT">True</label>
+						<input class="form-check-input" type="radio" id="visibilityF" name="visibility" value="0" checked>
+						<label class="form-label" for="visibilityF">False</label><br>
+                    <?php endif;?>
+
                 </div>
             <?php endif; ?>
         <?php endforeach; ?>
