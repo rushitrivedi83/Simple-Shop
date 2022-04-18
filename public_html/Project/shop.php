@@ -49,7 +49,7 @@ if (!empty($col) && !empty($order)) {
     $query .= " ORDER BY $col $order"; //be sure you trust these values, I validate via the in_array checks above
 }
 //paginate function
-$per_page = 3;
+$per_page = 10;
 paginate($total_query . $query, $params, $per_page);
 
 $query .= " LIMIT :offset, :count";
@@ -160,14 +160,14 @@ try {
                                 <?php se($item, 'category')?>
                             </div>
                             <?php if (se($item, "image", "", false)) : ?>
-                                <img src="<?php se($item, "image"); ?>" class="card-img-top" alt="...">
+                                <img src="<?php se($item, "image"); ?>" style="width: 100%" class="card-img-top" alt="...">
                             <?php endif; ?>
 
                             <div class="card-body">
                                 <a href= "product.php?id=<?php se($item, "id"); ?>" class="card-title"> <p class="card-title">Name: <?php se($item, "name"); ?> </p> </a>
                                 <p class="card-text">Description: <?php se($item, "description"); ?></p>
                             </div>
-                            <div class="card-footer">
+                            <div class="card-footer" style="size: auto">
                                 Cost: <?php se($item, "unit_price"); ?>
                                 <button onclick="purchase('<?php se($item, 'id'); ?>')" class="btn btn-primary">Buy Now</button>
                                 <?php if (has_role("Admin")): ?>
