@@ -184,6 +184,10 @@
         * For now limit to 10 most recent orders
         * Show a summary of relevant information
         * A list item can be clicked to view the full details in the Order Details Page (similar to Order Confirmation Page except no “Thank you” message)
+    * Store Owner will be able to see all Purchase History
+        * For now limit to 10 most recent orders
+        * A list item can be clicked to view the full details in the Order Details Page (similar to Order Confirmation Page except no “Thank you” message)
+
 
 
  
