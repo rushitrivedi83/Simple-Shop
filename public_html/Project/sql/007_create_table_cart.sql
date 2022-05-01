@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS RM_Cart(
+CREATE TABLE IF NOT EXISTS Cart(
     id int AUTO_INCREMENT PRIMARY KEY,
     product_id int,
     desired_quantity int,
