@@ -169,7 +169,7 @@ try {
                             </div>
                             <div class="card-footer" style="size: auto">
                                 Cost: <?php se($item, "unit_price"); ?>
-                                <button onclick="purchase('<?php se($item, 'id'); ?>')" class="btn btn-primary">Buy Now</button>
+                                <button onclick="purchase('<?php se($item, 'id'); ?>')" class="btn btn-primary">Add to Cart</button>
                                 <?php if (has_role("Admin")): ?>
                                  <a href = "admin/edit_item.php?id=<?php se($item, "id"); ?>";` id="edit" class="btn btn-secondary" >Edit</a>
 
