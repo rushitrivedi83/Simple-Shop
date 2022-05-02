@@ -22,7 +22,7 @@ if ( isset($_POST["address"]) && strlen($_POST["address"]) > 0) {
 			$balance = $amount;
 			$total_cost = 0;
 			foreach ($results as $row) {
-				$total_cost += (int)se($row, "subtotal", 0, false);
+				$total_cost += (float)se($row, "subtotal", 0, false);
 			}
 			if ($balance >= $total_cost) {
 				//can purchase
@@ -64,10 +64,10 @@ if ( isset($_POST["address"]) && strlen($_POST["address"]) > 0) {
 						$stmt->execute([
 							":id" => (int)$next_order_id,
 							":user_id" => (int)$user_id,
-							":total_price" => (int)$total_cost,
+							":total_price" => (float)$total_cost,
 							":address" => $fullAdd,
 							":payment_method" => $payment,
-							":money_received" => (int)$amount
+							":money_received" => (float)$amount
 						]);
 					} catch (PDOException $e) {
 						error_log("Error mapping data to Orders: " . var_export($e, true));
