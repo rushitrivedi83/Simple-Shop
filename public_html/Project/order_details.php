@@ -11,18 +11,10 @@ Displays a Thank you message
 */
 $db = getDB();
 $db->beginTransaction();
-$stmt = $db->prepare("SELECT max(id) as order_id FROM Orders WHERE user_id = :uid");
-$order_id = 0;
+$order_id = $_GET['id'];
 //get next order id
 $user_id = get_user_id();
-try {
-	$stmt->execute([":uid" => $user_id]);
-	$r = $stmt->fetch(PDO::FETCH_ASSOC);
-	$order_id = (int)se($r, "order_id", 0, false);
-} catch (PDOException $e) {
-	error_log("Error fetching order_id: " . var_export($e));
-	$db->rollback();
-}
+
 
 
 $stmt = $db->prepare("SELECT * FROM Orders WHERE id = :order_id");
@@ -62,14 +54,12 @@ $totalFormatted = number_format($totalFormatted, 2);
 
 <div class="container mt-5 mb-5">
     <div class="row d-flex justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card">
 				<br>
-				<h1 style="padding-left: 30" >Order Confirmation</h1>
+				<h1 style="padding-left: 30" >Order Details</h1>
                 <div class="text-left logo p-2 px-5"> <h3>Rushh</h4> </div>
                 <div class="invoice p-5">
-                    <h5>Thank you!</h5>
-					<h5>Your order is confirmed!</h5>
                     <div class="payment border-top mt-3 mb-3 border-bottom table-responsive">
                         <table class="table table-borderless">
                             <tbody>
@@ -107,7 +97,7 @@ $totalFormatted = number_format($totalFormatted, 2);
                                     $subItemTotal = $itemUnit * $itemQuantity;
                                 ?>
                                 <tr>
-                                    <td width="20%"> <a href="product.php?id=<?php se($row, "product_id", false)?>"> <img src="<?php se($row, "image", false);?>"  width="90"/> </a> </td>
+									<td width="20%"> <a href="product.php?id=<?php se($row, "product_id", false)?>"> <img src="<?php se($row, "image", false);?>"  width="90"/> </a> </td>
 
                                     <td width="60%"> <span class="font-weight-bold"> <?php se($row, "name", false) ?></span>
                                         <div class="product-qty"> 
