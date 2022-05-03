@@ -55,7 +55,7 @@
                 row.innerHTML =
                     `
                 <td colspan="100%">
-                <button class="btn btn-primary" onclick="purchase_cart()">Purchase</button>
+                <button class="btn btn-primary" onclick="checkout()">Checkout</button>
                 <button class="btn btn-secondary" onclick="deleteEntireCart()">Clear Cart</button>
                 </td>
                 `;
@@ -137,6 +137,10 @@
                 get_cart();
             }
         });
+    }
+
+    function checkout() {
+        window.location.href = "/Project/order.php"
     }
 
 	function add_to_cart(product_id, quantity = 1) {
