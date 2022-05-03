@@ -142,7 +142,9 @@
         * Link to related .md file: [Milestone2](https://github.com/rushitrivedi83/IT202-008/blob/Milestone2/public_html/Project/milestone2.md)
 		* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php)
 - Milestone 3
-	* User will be able to purchase items in their Cart
+	* [x] \(05/01/2022) User will be able to purchase items in their Cart
+        * Link to related .md file: [Milestone3](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone3.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/order.php](https://rat3-prod.herokuapp.com/Project/order.php) 
     	* Create an Orders table (id, user_id, created, total_price, address, payment_method, money_received)
         	* Payment method will simply record (Cash, Visa, MasterCard, Amex, etc) We will not be recording CC numbers or anything of that nature, this is just a sample and in real world projects you’d commonly use a third party payment processor
         	* Hint: This must be inserted first before you can insert into the OrderItems table
@@ -175,16 +177,22 @@
             * Update the Products table Stock for each item to deduct the Ordered Quantity
             * Clear out the user’s cart after successful order
             * Redirect user to Order Confirmation Page
-    * Order Confirmation Page
+    * [x] \(05/01/2022) Order Confirmation Page
+        * Link to related .md file: [Milestone3](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone3.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/confirm.php](https://rat3-prod.herokuapp.com/Project/confirm.php) 
         * Show the entire order details from the Order and OrderItems table (similar to cart)
             * Including a the cost of each line item and the total value
             * Show how they purchased and how much they paid
         * Displays a Thank you message
-    * User will be able to see their Purchase History
+    * [x] \(05/02/2022) User will be able to see their Purchase History
+        * Link to related .md file: [Milestone3](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone3.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/purchase_history.php](https://rat3-prod.herokuapp.com/Project/purchase_history.php) 
         * For now limit to 10 most recent orders
         * Show a summary of relevant information
         * A list item can be clicked to view the full details in the Order Details Page (similar to Order Confirmation Page except no “Thank you” message)
-    * Store Owner will be able to see all Purchase History
+    * [x] \(05/02/2022) Store Owner will be able to see all Purchase History
+		* Link to related .md file: [Milestone3](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone3.md)
+		* Prod URL: [https://rat3-prod.herokuapp.com/Project/purchase_history.php](https://rat3-prod.herokuapp.com/Project/purchase_history.php) 
         * For now limit to 10 most recent orders
         * A list item can be clicked to view the full details in the Order Details Page (similar to Order Confirmation Page except no “Thank you” message)
 
