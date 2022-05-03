@@ -155,20 +155,26 @@ try {
             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-4">
                 <?php foreach ($results as $item) : ?>
                     <div class="col">
-                        <div class="card bg-light" style="height:25em">
+                        <div class="card bg-light h-100">
                             <div class="card-header">
                                 <?php se($item, 'category')?>
                             </div>
-                            <?php if (se($item, "image", "", false)) : ?>
-                                <img src="<?php se($item, "image"); ?>" style="width: 100%" class="card-img-top" alt="...">
-                            <?php endif; ?>
-
+                            <a href= "product.php?id=<?php se($item, "id"); ?>"> 
+                                <?php if ( se($item, "image", "", false)) : ?>
+                                    <img src="<?php se($item, "image"); ?>" style="width: 100%; height: 15vw; object-fit: cover;" class="card-img-top" >
+                                <?php else: ?>
+                                    <img src="https://www.suzukijember.com/gallery/gambar_product/default.jpg" style="width: 100%; height: 15vw; object-fit: cover;"class="card-img-top" alt="banner">
+                                <?php endif;?>
+                            </a>
+                         
                             <div class="card-body">
-                                <a href= "product.php?id=<?php se($item, "id"); ?>" class="card-title"> <p class="card-title">Name: <?php se($item, "name"); ?> </p> </a>
+                                <p class="card-title">Name: <?php se($item, "name"); ?> </p>
                                 <p class="card-text">Description: <?php se($item, "description"); ?></p>
                             </div>
+                           
                             <div class="card-footer" style="size: auto">
-                                Cost: <?php se($item, "unit_price"); ?>
+                                <b>Cost: </b> $<?php se($item, "unit_price"); ?>
+                                <br>
                                 <button onclick="purchase('<?php se($item, 'id'); ?>')" class="btn btn-primary">Add to Cart</button>
                                 <?php if (has_role("Admin")): ?>
                                  <a href = "admin/edit_item.php?id=<?php se($item, "id"); ?>";` id="edit" class="btn btn-secondary" >Edit</a>

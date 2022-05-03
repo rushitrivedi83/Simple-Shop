@@ -2,6 +2,26 @@
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
 is_logged_in(true);
+
+$db = getDB();
+$user_id = get_user_id();
+$stmt = $db->prepare("SELECT Products.name as Name, desired_quantity, Products.stock
+FROM Cart 
+JOIN Products on Cart.product_id = Products.id
+WHERE Cart.user_id = :uid");
+try {
+	$stmt->execute([":uid" => $user_id]);
+	$quantitiesChecker = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+	error_log("Error Loading Stock " . var_export($e, true));
+	$db->rollback();
+}
+
+if(count($quantitiesChecker) <= 0) {
+	flash("Please add items to cart", "danger");
+	die(header("Location: shop.php"));
+}
+
 if ( isset($_POST["address"]) && strlen($_POST["address"]) > 0) {
 	$address = $_POST["address"];
 	$city = $_POST["city"];
@@ -12,13 +32,20 @@ if ( isset($_POST["address"]) && strlen($_POST["address"]) > 0) {
 	$payment = $_POST["payment"];
 	$amount = $_POST["amount"];
 
-	$user_id = get_user_id();
+
 	if ($user_id > 0) {
-		$db = getDB();
+	
 		$stmt = $db->prepare("SELECT name, c.id as line_id, product_id, desired_quantity, c.unit_price, (c.unit_price*desired_quantity) as subtotal FROM Cart c JOIN Products i on c.product_id = i.id WHERE c.user_id = :uid");
 		try {
 			$stmt->execute([":uid" => $user_id]);
 			$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			if(count($results) <= 0) {
+				flash("Please add items to cart", "danger");
+				die(header("Location: shop.php"));
+				error_log("No Items In Cart" . var_export($results));
+				$db->rollback();
+			}
 			$balance = $amount;
 			$total_cost = 0;
 			foreach ($results as $row) {
@@ -38,6 +65,10 @@ if ( isset($_POST["address"]) && strlen($_POST["address"]) > 0) {
 				} catch (PDOException $e) {
 					error_log("Error fetching order_id: " . var_export($e));
 					$db->rollback();
+				}
+				//Determine which product is low on stock
+				if ($next_order_id > 0) {
+			
 				}
 
 				
@@ -144,6 +175,14 @@ if ( isset($_POST["address"]) && strlen($_POST["address"]) > 0) {
     </div>
 
     <div class="col-md-8 order-md-1">
+		<div class="alert alert-light" role="alert">
+			<?php foreach ($quantitiesChecker as $quant):?>
+				<?php if ($quant['desired_quantity'] > $quant['stock']): ?>
+					<p> <b> <?php se($quant, 'Name', false)?></b>'s quantity is too high, please lower it. Only <b> <?php se($quant, 'stock', false) ?> in stock </p>
+				<?php endif ?>
+
+			<?php endforeach; ?>
+		</div>
       <h4 class="mb-3">Billing address</h4>
       <form class="needs-validation" novalidate="" onsubmit="return validate(this)" method="POST">
 

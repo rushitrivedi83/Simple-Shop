@@ -12,8 +12,14 @@ Displays a Thank you message
 $db = getDB();
 $db->beginTransaction();
 $order_id = $_GET['id'];
+
 //get next order id
-$user_id = get_user_id();
+if(isset($_GET['uid'])) {
+	$user_id = $_GET['uid'];
+} else {
+	$user_id = get_user_id();
+}
+
 
 
 
