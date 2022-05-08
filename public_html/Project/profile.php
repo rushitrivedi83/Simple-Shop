@@ -3,10 +3,16 @@ require_once(__DIR__ . "/../../partials/nav.php");
 is_logged_in(true);
 ?>
 <?php
+$db = getDB();
 if (isset($_POST["save"])) {
     $email = se($_POST, "email", null, false);
     $username = se($_POST, "username", null, false);
+    $visibility = 0;
+    if( isset($_POST["visibility"]) && $_POST["visibility"] == "on") {
+        $visibility = 1;
+    }
     $hasError = false;
+
     //sanitize
     $email = sanitize_email($email);
     //validate
@@ -19,9 +25,8 @@ if (isset($_POST["save"])) {
         $hasError = true;
     }
     if (!$hasError) {
-        $params = [":email" => $email, ":username" => $username, ":id" => get_user_id()];
-        $db = getDB();
-        $stmt = $db->prepare("UPDATE Users set email = :email, username = :username where id = :id");
+        $params = [":email" => $email, ":username" => $username, ":id" => get_user_id(), ":visibility" => $visibility];
+        $stmt = $db->prepare("UPDATE Users set email = :email, username = :username, visibility = :visibility where id = :id");
         try {
             $stmt->execute($params);
             flash("Profile saved", "success");
@@ -44,7 +49,7 @@ if (isset($_POST["save"])) {
             flash("An unexpected error occurred, please try again", "danger");
             //echo "<pre>" . var_export($e->errorInfo, true) . "</pre>";
         }
-    }
+    }   
 
 
     //check/update password
@@ -92,6 +97,24 @@ if (isset($_POST["save"])) {
 <?php
 $email = get_user_email();
 $username = get_username();
+
+$stmt = $db->prepare("SELECT visibility from Users where id = :id LIMIT 1");
+$isVisible = false;
+try {
+    $stmt->execute([":id" => get_user_id()]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user) {
+        if (se($user, "visibility", 0, false) > 0) {
+            $isVisible = true;
+        }
+    } else {
+        flash("User doesn't exist", "danger");
+    }
+} catch (Exception $e) {
+    flash("An unexpected error occurred, please try again", "danger");
+}
+
+
 ?>
 
 <div class="container-fluid">
@@ -104,6 +127,14 @@ $username = get_username();
         <div class="mb-3">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" name="username" id="username" value="<?php se($username); ?>" />
+        </div>
+        <div class="mb-3">
+            <div class="form-check form-switch">
+                <input <?php if ($isVisible) {
+                            echo "checked";
+                        } ?> class="form-check-input" type="checkbox" role="switch" id="visibility" name="visibility">
+                <label class="form-check-label" for="visibility">Toggle Visibility</label>
+            </div>
         </div>
         <!-- DO NOT PRELOAD PASSWORD -->
         <div style="font-weight: bold" class="mb-3">Password Reset</div>
