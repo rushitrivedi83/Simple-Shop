@@ -18,7 +18,7 @@ $cat = se($_GET, "category", "all", false);
 
 
 //allowed list
-if (!in_array($col, ["unit_price", "stock", "name", "created", "outofstock"])) {
+if (!in_array($col, ["unit_price", "stock", "name", "created", "outofstock", "avg_rating"])) {
     $col = "unit_price"; //default value, prevent sql injection
 }
 
@@ -120,9 +120,11 @@ try {
                     <option value="stock">Stock</option>
                     <option value="name">Name</option>
                     <option value="created">Created</option>
+                    <option value="avg_rating">Rating</option>
                     <?php if (has_role("Admin")): ?>
                     <option value="outofstock">Out of Stock</option>
                     <?php endif; ?>
+
                 </select>
                 <script>
                     //quick fix to ensure proper value is selected since
