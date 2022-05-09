@@ -9,8 +9,10 @@ $results = [];
 
 if (has_role("Admin")) {
     $stmt = $db->prepare(
-        "SELECT id as 'Order ID', user_id as 'User ID', created as 'Order Placed', total_price as Cost, address as 'Address', payment_method as 'Payment Method' , money_received as 'Payment Received'
-        FROM Orders 
+        "SELECT order_id as 'Order ID', Orders.user_id as 'User ID', OrderItems.product_id as 'Product ID', Orders.created as 'Order Placed', OrderItems.quantity as 'Quantity', (OrderItems.unit_price * OrderItems.quantity) as Subtotal, address as 'Address', payment_method as 'Payment Method', money_received as 'Payment Received', Products.category as 'Category'
+        FROM OrderItems
+		JOIN Orders on OrderItems.order_id = Orders.id
+		JOIN Products on OrderItems.product_id = Products.id
         ORDER BY Orders.id DESC
         LIMIT 10"
     );
@@ -23,9 +25,11 @@ if (has_role("Admin")) {
     }
 } else {
     $stmt = $db->prepare(
-        "SELECT id as 'Order ID', user_id as 'User ID', created as 'Order Placed', total_price as Cost, address as 'Address', payment_method as 'Payment Method' , money_received as 'Payment Received'
-        FROM Orders
-        WHERE user_id = :uid
+        "SELECT order_id as 'Order ID', Orders.user_id as 'User ID', OrderItems.product_id as 'Product ID', Orders.created as 'Order Placed', OrderItems.quantity as 'Quantity', (OrderItems.unit_price * OrderItems.quantity) as Subtotal, address as 'Address', payment_method as 'Payment Method', money_received as 'Payment Received', Products.category as 'Category'
+        FROM OrderItems
+		JOIN Orders on OrderItems.order_id = Orders.id
+		JOIN Products on OrderItems.product_id = Products.id
+        WHERE OrderItems.user_id = :uid
         ORDER BY Orders.id DESC
         LIMIT 10"
     );
@@ -55,6 +59,7 @@ if (has_role("Admin")) {
 						<?php foreach ($results as $index => $record) : ?>
 							<?php $orderID = $record['Order ID'];
 									$userID = $record['User ID'];
+									$productID = $record['Product ID'];
 							?>
 							<?php if ($index == 0) : ?>
 								<thead>
@@ -62,12 +67,13 @@ if (has_role("Admin")) {
 										<th><?php se($column); ?></th>
 									<?php endforeach; ?>
 									<th>Order Details</th>
+									<th>Item Details</th>
 								</thead>
 							<?php endif; ?>
 							<tr>
 								<?php foreach ($record as $column => $value) : ?>
 									<?php $formatted = number_format( (float) $value, 2); ?>
-									<?php if($column == "Cost" || $column == "Payment Received") :?>
+									<?php if($column == "Subtotal" || $column == "Payment Received") :?>
 										<td>$<?php se($formatted, null, "N/A"); ?></td>
 									<?php else :?>
 										<td><?php se($value, null, "N/A"); ?></td>
@@ -77,6 +83,10 @@ if (has_role("Admin")) {
 								<td>
 									<!-- other action buttons can go here-->
 									<a class="btn btn-primary" href="order_details.php?id=<?php se($orderID, true); ?>&uid=<?php se($userID, true); ?>">Details</a>
+								
+								</td>
+								<td>
+								<a class="btn btn-primary" href="product.php?id=<?php se($productID, true);?>">Item Details</a>
 								</td>
 							</tr>
 						<?php endforeach; ?>
