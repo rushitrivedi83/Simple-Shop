@@ -110,7 +110,6 @@ try{
 
 
 if(isset($_POST['rating']) && isset($_POST['review'])) {
-	echo(var_export($_POST, true));
 	$productid = se($_GET, "id", -1, false);
 	$userid = get_user_id();
 
@@ -234,8 +233,9 @@ if(isset($_POST['rating']) && isset($_POST['review'])) {
 						<?php if (count($ratings) == 0) : ?>
 							<p>No ratings to show</p>
 						<?php else : ?>
+								<?php $avgratingformat = number_format($result['avg_rating'], 2);?>
 								<div class="text-center">
-									<p> <b> Average Rating: </b> <?php se($result, "avg_rating", false)?> / 5.0 </p>
+									<p> <b> Average Rating: </b> <?php se($avgratingformat, false)?> / 5.00 </p>
 								</div>
 						
 								<hr>	

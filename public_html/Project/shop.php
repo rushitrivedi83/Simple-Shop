@@ -38,7 +38,7 @@ if (!in_array($order, ["asc", "desc"])) {
 $name = se($_GET, "name", "", false);
 
 //split query into data and total
-$base_query = "SELECT id, name, description, unit_price, stock, category, image FROM Products";
+$base_query = "SELECT id, name, description, unit_price, stock, category, avg_rating, image FROM Products";
 $total_query = "SELECT count(1) as total FROM Products";
 //dynamic query
 $query = " WHERE 1=1 and visibility > 0 "; //1=1 shortcut to conditionally build AND clauses
@@ -185,10 +185,12 @@ try {
                                     <img src="https://www.suzukijember.com/gallery/gambar_product/default.jpg" style="width: 100%; height: 15vw; object-fit: cover;"class="card-img-top" alt="banner">
                                 <?php endif;?>
                             </a>
+                            <?php $rating = number_format($item['avg_rating'], 2);?>
                          
                             <div class="card-body">
-                                <p class="card-title">Name: <?php se($item, "name"); ?> </p>
-                                <p class="card-text">Description: <?php se($item, "description"); ?></p>
+                                <p class="card-title"> <b>Name: </b> <?php se($item, "name"); ?> </p>
+                                <p class="card-text"> <b>Description: </b><?php se($item, "description"); ?></p>
+                                <p class="card-text"> <b>Rating: </b><?php se($rating);?> / 5.00</p>
                             </div>
                            
                             <div class="card-footer" style="size: auto">
