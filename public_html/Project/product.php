@@ -30,9 +30,11 @@ if (!has_role("Admin") && $result['visibility'] == 0) {
     die(header("Location: $BASE_PATH/shop.php"));
 }
 
-$stmt = $db->prepare("SELECT user_id, product_id, rating, comment, Users.email, Users.username, Users.visibility  from Ratings
+//Getting the ratings
+$stmt = $db->prepare("SELECT user_id, Ratings.modified, product_id, rating, comment, Users.email, Users.username, Users.visibility  from Ratings
 JOIN Users on user_id = Users.id
-WHERE product_id = :product_id LIMIT 10 ");
+WHERE product_id = :product_id Order By Ratings.modified Desc LIMIT 10;");
+
 $ratings = [];
 
 try {
@@ -60,6 +62,7 @@ try{
 }
 
 
+
 if(isset($_POST['rating']) && isset($_POST['review'])) {
 	echo(var_export($_POST, true));
 	$productid = se($_GET, "id", -1, false);
@@ -75,6 +78,30 @@ if(isset($_POST['rating']) && isset($_POST['review'])) {
 	} catch (Exception $e) {
 		flash("Please rate the product again!", "danger");
 	}
+
+	//Get average after the new insert
+	$avgRating = [];
+	$stmt = $db->prepare("SELECT AVG(rating) AS average FROM Ratings WHERE product_id = :product_id");
+	try {
+		$stmt->execute([":product_id" => $id]);
+		$r = $stmt->fetch(PDO::FETCH_ASSOC);
+		$avgRating = number_format($r['average'],2);
+
+	} catch (PDOException $e) {
+		error_log(var_export($e, true));
+		flash("Error getting new average", "danger");	
+	}
+	//Update new avg
+	$stmt = $db->prepare("UPDATE Products SET avg_rating = :avg_rating WHERE id = :product_id");
+	try {
+		$stmt->execute([":avg_rating" => $avgRating, ":product_id" => $productid]);
+		flash("Successfully updated the average");
+	} catch (PDOException $e) {
+		error_log(var_export($e, true));
+		flash("Error getting new average", "danger");	
+	}
+
+
 
 
 }
@@ -161,6 +188,11 @@ if(isset($_POST['rating']) && isset($_POST['review'])) {
 						<?php if (count($ratings) == 0) : ?>
 							<p>No ratings to show</p>
 						<?php else : ?>
+								<div class="text-center">
+									<p> <b> Average Rating: </b> <?php se($result, "avg_rating", false)?> / 5.0 </p>
+								</div>
+						
+								<hr>	
 								<?php foreach ($ratings as $userRating) : ?>
 									<?php if($userRating['visibility'] == 0):?>
 										<p> <b> User: </b>  Anonymous </p>	
@@ -169,7 +201,7 @@ if(isset($_POST['rating']) && isset($_POST['review'])) {
 									<?php endif; ?>
 				
 									
-									<p> <b>Rating: </b> <?php se($userRating, "rating", false); ?> Stars</p>
+									<p> <b>Rating: </b> <?php se($userRating, "rating", false); ?> / 5.0</p>
 									<p> <b>Comment: </b><?php se($userRating, "comment", false); ?> </p>
 
 									<hr>
