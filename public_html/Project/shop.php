@@ -15,9 +15,19 @@ $col = se($_GET, "col", "unit_price", false);
 $cat = se($_GET, "category", "all", false);
 
 
+
+
 //allowed list
-if (!in_array($col, ["unit_price", "stock", "name", "created"])) {
+if (!in_array($col, ["unit_price", "stock", "name", "created", "outofstock"])) {
     $col = "unit_price"; //default value, prevent sql injection
+}
+
+if($col == "outofstock") {
+    if(!has_role("Admin")) {
+        flash("You don't have permission to view this page", "warning");
+        die(header("Location: $BASE_PATH/shop.php"));
+     
+    }
 }
 $order = se($_GET, "order", "asc", false);
 //allowed list
@@ -31,7 +41,13 @@ $name = se($_GET, "name", "", false);
 $base_query = "SELECT id, name, description, unit_price, stock, category, image FROM Products";
 $total_query = "SELECT count(1) as total FROM Products";
 //dynamic query
-$query = " WHERE 1=1 and stock > 0 and visibility > 0"; //1=1 shortcut to conditionally build AND clauses
+$query = " WHERE 1=1 and visibility > 0 "; //1=1 shortcut to conditionally build AND clauses
+if($col == "outofstock") {
+    $query = $query . "and stock = 0"; 
+} else {
+    $query = $query . "and stock > 0"; 
+}
+
 $params = []; //define default params, add keys as needed and pass to execute
 
 //apply category filter
@@ -45,11 +61,11 @@ if (!empty($name)) {
     $params[":name"] = "%$name%";
 }
 //apply column and order sort
-if (!empty($col) && !empty($order)) {
+if (!empty($col) && !empty($order) && $col != "outofstock") {
     $query .= " ORDER BY $col $order"; //be sure you trust these values, I validate via the in_array checks above
 }
 //paginate function
-$per_page = 5;
+$per_page = 6;
 paginate($total_query . $query, $params, $per_page);
 
 $query .= " LIMIT :offset, :count";
@@ -64,8 +80,6 @@ foreach ($params as $key => $value) {
 }
 $params = null; //set it to null to avoid issues
 
-
-//$stmt = $db->prepare("SELECT id, name, description, cost, stock, image FROM RM_Items WHERE stock > 0 LIMIT 50");
 try {
     $stmt->execute($params); //dynamically populated params to bind
     $r = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -73,7 +87,7 @@ try {
         $results = $r;
     }
 } catch (PDOException $e) {
-    error_log(var_export($e, true));
+   echo(var_export($e, true));
     flash("Error fetching items", "danger");
 }
 ?>
@@ -106,6 +120,9 @@ try {
                     <option value="stock">Stock</option>
                     <option value="name">Name</option>
                     <option value="created">Created</option>
+                    <?php if (has_role("Admin")): ?>
+                    <option value="outofstock">Out of Stock</option>
+                    <?php endif; ?>
                 </select>
                 <script>
                     //quick fix to ensure proper value is selected since
