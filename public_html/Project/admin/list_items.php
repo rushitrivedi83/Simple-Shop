@@ -8,11 +8,24 @@ if (!has_role("Admin")) {
 }
 
 $results = [];
+$db = getDB();
 if (isset($_POST["itemName"])) {
-    $db = getDB();
+    
     $stmt = $db->prepare("SELECT id, name, description, stock, unit_price, image, visibility from Products WHERE name like :name LIMIT 50");
     try {
         $stmt->execute([":name" => "%" . $_POST["itemName"] . "%"]);
+        $r = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($r) {
+            $results = $r;
+        }
+    } catch (PDOException $e) {
+        error_log(var_export($e, true));
+        flash("Error fetching records", "danger");
+    }
+} else {
+    $stmt = $db->prepare("SELECT id, name, description, stock, unit_price, image, visibility from Products LIMIT 50");
+    try {
+        $stmt->execute([]);
         $r = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($r) {
             $results = $r;
