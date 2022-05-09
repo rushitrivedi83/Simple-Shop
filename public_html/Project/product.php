@@ -31,22 +31,68 @@ if (!has_role("Admin") && $result['visibility'] == 0) {
 }
 
 //Getting the ratings
-$stmt = $db->prepare("SELECT user_id, Ratings.modified, product_id, rating, comment, Users.email, Users.username, Users.visibility  from Ratings
-JOIN Users on user_id = Users.id
-WHERE product_id = :product_id Order By Ratings.modified Desc LIMIT 10;");
-
 $ratings = [];
+//split query into data and total
+$base_query = "SELECT user_id, Ratings.modified, product_id, rating, comment, Users.email, Users.username, Users.visibility  from Ratings
+JOIN Users on user_id = Users.id";
 
-try {
-	$stmt->execute([":product_id" => $id]);
-	$r = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	if ($r) {
-		$ratings = $r;
-	}
-} catch (PDOException $e) {
-	error_log(var_export($e, true));
-	flash("Error fetching records", "danger");
+$total_query = "SELECT count(1) as total FROM Ratings";
+//dynamic query
+$query = " WHERE product_id = :product_id Order By Ratings.modified Desc"; //1=1 shortcut to conditionally build AND clauses
+$params = [":product_id" => $id]; //define default params, add keys as needed and pass to execute
+
+//paginate function
+$per_page = 4;
+
+paginate($total_query . $query, $params, $per_page);
+
+$query .= " LIMIT :offset, :count";
+$params[":offset"] = $offset;
+$params[":count"] = $per_page;
+
+
+//get the records
+$stmt = $db->prepare($base_query . $query); //dynamically generated query
+//we'll want to convert this to use bindValue so ensure they're integers so lets map our array
+foreach ($params as $key => $value) {
+    $type = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+    $stmt->bindValue($key, $value, $type);
 }
+$params = null; //set it to null to avoid issues
+
+
+//$stmt = $db->prepare("SELECT id, name, description, cost, stock, image FROM RM_Items WHERE stock > 0 LIMIT 50");
+try {
+    $stmt->execute($params); //dynamically populated params to bind
+    $r = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($r) {
+        $ratings = $r;
+    }
+} catch (PDOException $e) {
+    error_log(var_export($e, true));
+    flash("Error fetching items", "danger");
+}
+
+
+
+
+// $stmt = $db->prepare("SELECT user_id, Ratings.modified, product_id, rating, comment, Users.email, Users.username, Users.visibility  from Ratings
+// JOIN Users on user_id = Users.id
+// WHERE product_id = :product_id Order By Ratings.modified Desc LIMIT 10;");
+
+
+
+// try {
+// 	$stmt->execute([":product_id" => $id]);
+// 	$r = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// 	if ($r) {
+// 		$ratings = $r;
+// 	}
+// } catch (PDOException $e) {
+// 	error_log(var_export($e, true));
+// 	flash("Error fetching records", "danger");
+// }
+
 
 $stmt = $db->prepare("SELECT * FROM OrderItems WHERE user_id = :user_id AND product_id = :product_id");
 $purchaseArr = [];
@@ -207,7 +253,11 @@ if(isset($_POST['rating']) && isset($_POST['review'])) {
 									<hr>
 									
 								<?php endforeach; ?>
+								<div class="mt-3">
+									<?php require(__DIR__ . "/../../partials/pagination.php"); ?>
+								</div>
 						<?php endif; ?>
+						
 
 					</div>
 					
