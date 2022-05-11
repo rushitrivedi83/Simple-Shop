@@ -118,7 +118,7 @@ try {
             <div class="input-group">
                 <div class="input-group-text">Sort</div>
                 <!-- make sure these match the in_array filter above-->
-                <select class="form-control bg-info" style="width: auto" name="col" value="<?php se($col); ?>" data="took">
+                <select class="form-control bg-info" style="width: auto;" name="col" value="<?php se($col); ?>" data="took">
                     <option value="unit_price">Cost</option>
                     <option value="stock">Stock</option>
                     <option value="name">Name</option>
@@ -131,7 +131,7 @@ try {
                     //value setting only works after the options are defined and php has the value set prior
                     document.forms[0].col.value = "<?php se($col); ?>";
                 </script>
-                <select class="form-control" style="width:auto" name="order" value="<?php se($order); ?>">
+                <select class="form-control" style="width:auto;" name="order" value="<?php se($order); ?>">
                     <option class="bg-white" value="asc">Up</option>
                     <option class="bg-white" value="desc">Down</option>
                 </select>
@@ -145,9 +145,10 @@ try {
                         document.forms[0].order.className = "form-control bg-danger";
                     }
                 </script>
-
+            
+                <div class="input-group-text">Filter</div>
                 <!--- Select categories -->
-                <select class="form-control bg-light" style="width:auto" name="category" value="<?php se($cat);?>">
+                <select class="form-control" style="width:auto;background:#ee8080;" name="category" value="<?php se($cat);?>">
                     <option value="all">All</option>
                     <?php foreach($categories as $category):?>
                         <option value="<?php se($category, 'category');?>">
@@ -161,7 +162,7 @@ try {
 
                 <?php if (has_role("Admin")): ?>
                      <!--- Select categories -->
-                    <select class="form-control bg-light" style="width:auto" name="stock" value="<?php se($cat);?>">
+                    <select class="form-control" style="width:auto;background:#178a94;" name="stock" value="<?php se($cat);?>">
                         <option value="inStock">In Stock</option>
                         <option value="outofstock">Out of Stock</option>
                      
