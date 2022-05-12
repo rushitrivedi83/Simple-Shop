@@ -182,13 +182,19 @@ try {
                 <div>
                     Joined: <?php se($joined); ?>
                 </div>
-                </div>
+            </div>
             <?php else : ?>
-                Profile is private
+                <b>Profile is private</b>
                 <?php
                 flash("Profile is private", "warning");
-                redirect("home.php");
                 ?>
+                <div>
+                    Username: <?php se($username); ?>
+                </div>
+                    <div>
+                        Joined: <?php se($joined); ?>
+                    </div>
+                </div>
             <?php endif; ?>
             <?php if ($isMe) : ?>
                 <a href="?edit" class="btn btn-primary">Edit</a>
