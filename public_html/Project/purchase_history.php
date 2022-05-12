@@ -6,12 +6,21 @@ $user_id = get_user_id();
 $db = getDB();
 $results = [];
 
-$col = se($_GET, "col", "orderid", false);
+//get all categories
+$stmt = $db->prepare("SELECT DISTINCT category from Products");
+$stmt->execute();
+$categories = $stmt->fetchAll();
+
+
+$col = se($_GET, "col", "order_id", false);
 $order = se($_GET, "order", "desc", false);
+$cat = se($_GET, "category", "all", false);
+$start = se($_GET, "start_date", null, false);
+$end = se($_GET, "end_date", null, false);
 
 //allowed list
-if (!in_array($col, ["id", "total_price", "created"])) {
-    $col = "id"; //default value, prevent sql injection
+if (!in_array($col, ["order_id", "total_price", "created"])) {
+    $col = "order_id"; //default value, prevent sql injection
 }
 
 
@@ -22,8 +31,13 @@ if (!in_array($col, ["id", "total_price", "created"])) {
 // JOIN Orders on OrderItems.order_id = Orders.id
 // JOIN Products on OrderItems.product_id = Products.id";
 
-$base_query = "SELECT id as 'Order ID', user_id as 'User ID', created as 'Order Placed', total_price as Cost, address as 'Address', payment_method as 'Payment Method' , money_received as 'Payment Received'
-FROM Orders";
+$base_query = "SELECT DISTINCT order_id as 'Order ID', Orders.user_id as 'User ID', Orders.created as 'Order Placed', total_price as Cost, address as 'Address', payment_method as 'Payment Method' , money_received as 'Payment Received'
+FROM OrderItems JOIN Orders ON OrderItems.order_id = Orders.id
+JOIN Products ON OrderItems.product_id = Products.id
+";
+
+// $base_query = "SELECT id as 'Order ID', user_id as 'User ID', created as 'Order Placed', total_price as Cost, address as 'Address', payment_method as 'Payment Method' , money_received as 'Payment Received'
+// FROM Orders";
 
 
 if (has_role("Admin")) {
@@ -33,6 +47,21 @@ if (has_role("Admin")) {
 	//paginate function
 	$per_page = 10;
 	$total_query = "SELECT count(1) as total FROM Orders";
+
+	//apply category filter
+	if(!empty($cat) && $cat != "all") {
+		$query .= " AND Products.category = :category";
+		$params[":category"] = $cat; 
+	} 
+
+	//Apply date filter
+	if(!empty($start) && !empty($end)) {
+		$query .= " AND Orders.created BETWEEN :start AND :end";	
+		$params[":start"] = $start;
+		$params[":end"] = $end;  
+	}
+
+
 	paginate($total_query . $query, $params, $per_page);
 
 	//apply column and order sort
@@ -60,12 +89,26 @@ if (has_role("Admin")) {
         $db->rollback();
     }
 } else {
-	$query = " WHERE user_id = :uid";
+	$query = " WHERE OrderItems.user_id = :uid";
 	$params = [":uid" => $user_id];
 
 	//paginate function
 	$per_page = 10;
 	$total_query = "SELECT count(1) as total FROM Orders";
+
+	//apply category filter
+	if(!empty($cat) && $cat != "all") {
+		$query .= " AND Products.category = :category";
+		$params[":category"] = $cat; 
+	} 
+
+	//Apply date filter
+	if(!empty($start) && !empty($end)) {
+		$query .= " AND Orders.created BETWEEN :start AND :end";	
+		$params[":start"] = $start;
+		$params[":end"] = $end;  
+	}
+
 	paginate($total_query . $query, $params, $per_page);
 
 	//apply column and order sort
@@ -97,15 +140,28 @@ if (has_role("Admin")) {
 
 
 ?>
+<script>
+	function validate(form) {
+		console.log(form);
+
+		let pass = true;
+		if(form.start_date.value.length > 0 && form.end_date.value.length <= 0) {
+			flash("Please enter a date range with BOTH starting and end date", "warning");
+			pass=false;
+		}
+
+		return pass;
+	}
+</script>
 
 <div class="container mt-5 mb-5">
-<form class="row row-cols-auto g-3 align-items-center">
+<form class="row row-cols-auto g-3 align-items-center" onsubmit="return validate(this)">
         <div class="col">
             <div class="input-group">
                 <div class="input-group-text">Sort</div>
                 <!-- make sure these match the in_array filter above-->
                 <select class="form-control bg-info" style="width: auto;" name="col" value="<?php se($col); ?>" data="took">
-					<option value="id">orderID</option> 
+					<option value="order_id">orderID</option> 
 					<option value="total_price">Cost</option>
                     <option value="created">Order Placed</option>
                 </select>
@@ -128,8 +184,11 @@ if (has_role("Admin")) {
                         document.forms[0].order.className = "form-control bg-danger";
                     }
                 </script>
-            
-                <div class="input-group-text">Filter</div>
+			</div>
+		</div>
+		<div class = "col">	
+			<div class="input-group">
+                <div class="input-group-text">Filters</div>
                 <!--- Select categories -->
                 <select class="form-control" style="width:auto;background:#ee8080;" name="category" value="<?php se($cat);?>">
                     <option value="all">All</option>
@@ -142,12 +201,29 @@ if (has_role("Admin")) {
                 <script data="this">
                     document.forms[0].category.value = "<?php se($cat); ?>";
                 </script>
+				 <div class="input-group-text"> Between </div>
 
-            </div>
+				<input type="date" name="start_date"/>
+				<script data="this">
+                    document.forms[0].start_date.value = "<?php se($start); ?>";
+                </script>
+				<div class="input-group-text"> And </div>
+
+				<input type="date" name="end_date"/>
+				<script data="this">
+                    document.forms[0].end_date.value = "<?php se($end); ?>";
+                </script>
+			</div>
+
         </div>
         <div class="col">
             <div class="input-group">
                 <input type="submit" class="btn btn-primary" value="Apply" />
+            </div>
+        </div>
+		<div class="col">
+			<div class="input-group">
+                <a href="purchase_history.php" class="btn btn-secondary" value="Reset">RESET</a>
             </div>
         </div>
     </form>
@@ -157,6 +233,7 @@ if (has_role("Admin")) {
             <div class="card">
 				<br>
 				<h1 style="padding-left: 30px">Purchase History</h1> <br>
+				<?php $arr = array(); ?>
 				<?php if (count($results) == 0) : ?>
 					<p >No results to show</p>
 				<?php else : ?>
@@ -168,15 +245,25 @@ if (has_role("Admin")) {
 							<?php if ($index == 0) : ?>
 								<thead>
 									<?php foreach ($record as $column => $value) : ?>
+										<?php if($column == 'category') continue; ?>
 										<th><?php se($column); ?></th>
 									<?php endforeach; ?>
 									<th>Order Details</th>
 								</thead>
 							<?php endif; ?>
+							<?php 
+								if(in_array($orderID, $arr)):
+										continue;
+								else:
+									array_push($arr, $orderID);
+								endif;
+							?>
+
 							<tr>
 								<?php foreach ($record as $column => $value) : ?>
+									<?php if($column == 'category') continue; ?>
 									<?php $formatted = number_format( (float) $value, 2); ?>
-									<?php if($column == "Subtotal" || $column == "Payment Received") :?>
+									<?php if($column == "Cost" || $column == "Payment Received") :?>
 										<td>$<?php se($formatted, null, "N/A"); ?></td>
 									<?php else :?>
 										<td><?php se($value, null, "N/A"); ?></td>
