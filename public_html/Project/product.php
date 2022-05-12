@@ -240,13 +240,7 @@ if(isset($_POST['rating']) && isset($_POST['review'])) {
 						
 								<hr>	
 								<?php foreach ($ratings as $userRating) : ?>
-									<?php if($userRating['visibility'] == 0):?>
-										<p> <b> User: </b>  Anonymous </p>	
-									<?php else: ?>
-										<p> <b> User: </b>  <?php se($userRating, "email", false); ?> </p>
-									<?php endif; ?>
-				
-									
+									<p> <b> User: </b>  <a href="profile.php?id=<?php echo se($userRating, 'user_id', false);?>"> <?php se($userRating, "username", false); ?></a> </p>
 									<p> <b>Rating: </b> <?php se($userRating, "rating", false); ?> / 5.0</p>
 									<p> <b>Comment: </b><?php se($userRating, "comment", false); ?> </p>
 
