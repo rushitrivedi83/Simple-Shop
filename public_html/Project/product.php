@@ -42,7 +42,7 @@ $query = " WHERE product_id = :product_id Order By Ratings.modified Desc"; //1=1
 $params = [":product_id" => $id]; //define default params, add keys as needed and pass to execute
 
 //paginate function
-$per_page = 4;
+$per_page = 10;
 
 paginate($total_query . $query, $params, $per_page);
 

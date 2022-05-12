@@ -15,8 +15,8 @@ $categories = $stmt->fetchAll();
 $col = se($_GET, "col", "order_id", false);
 $order = se($_GET, "order", "desc", false);
 $cat = se($_GET, "category", "all", false);
-$start = se($_GET, "start_date", null, false);
-$end = se($_GET, "end_date", null, false);
+$start = se($_GET, "start_date", "", false);
+$end = se($_GET, "end_date", "", false);
 
 //allowed list
 if (!in_array($col, ["order_id", "total_price", "created"])) {
@@ -103,7 +103,7 @@ if (has_role("Admin")) {
 	} 
 
 	//Apply date filter
-	if(!empty($start) && !empty($end)) {
+	if(!empty($start) && !empty($end) && strlen($start) > 0 && strlen($end) > 0) {
 		$query .= " AND Orders.created BETWEEN :start AND :end";	
 		$params[":start"] = $start;
 		$params[":end"] = $end;  
