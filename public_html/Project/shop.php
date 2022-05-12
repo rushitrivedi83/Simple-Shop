@@ -13,22 +13,25 @@ $categories = $stmt->fetchAll();
 //Sort and Filters
 $col = se($_GET, "col", "unit_price", false);
 $cat = se($_GET, "category", "all", false);
+$stock = se($_GET, "stock", "inStock", false);
 
 
 
 
 //allowed list
-if (!in_array($col, ["unit_price", "stock", "name", "created", "outofstock", "avg_rating"])) {
+if (!in_array($col, ["unit_price", "stock", "name", "created", "avg_rating"])) {
     $col = "unit_price"; //default value, prevent sql injection
 }
 
-if($col == "outofstock") {
+
+if($stock == "outofstock") {
     if(!has_role("Admin")) {
         flash("You don't have permission to view this page", "warning");
         die(header("Location: $BASE_PATH/shop.php"));
      
     }
 }
+
 $order = se($_GET, "order", "asc", false);
 //allowed list
 if (!in_array($order, ["asc", "desc"])) {
@@ -42,7 +45,7 @@ $base_query = "SELECT id, name, description, unit_price, stock, category, avg_ra
 $total_query = "SELECT count(1) as total FROM Products";
 //dynamic query
 $query = " WHERE 1=1 and visibility > 0 "; //1=1 shortcut to conditionally build AND clauses
-if($col == "outofstock") {
+if($stock == "outofstock") {
     $query = $query . "and stock = 0"; 
 } else {
     $query = $query . "and stock > 0"; 
@@ -61,7 +64,7 @@ if (!empty($name)) {
     $params[":name"] = "%$name%";
 }
 //apply column and order sort
-if (!empty($col) && !empty($order) && $col != "outofstock") {
+if (!empty($col) && !empty($order)) {
     $query .= " ORDER BY $col $order"; //be sure you trust these values, I validate via the in_array checks above
 }
 //paginate function
@@ -115,15 +118,12 @@ try {
             <div class="input-group">
                 <div class="input-group-text">Sort</div>
                 <!-- make sure these match the in_array filter above-->
-                <select class="form-control bg-info" style="width: auto" name="col" value="<?php se($col); ?>" data="took">
+                <select class="form-control bg-info" style="width: auto;" name="col" value="<?php se($col); ?>" data="took">
                     <option value="unit_price">Cost</option>
                     <option value="stock">Stock</option>
                     <option value="name">Name</option>
                     <option value="created">Created</option>
                     <option value="avg_rating">Rating</option>
-                    <?php if (has_role("Admin")): ?>
-                    <option value="outofstock">Out of Stock</option>
-                    <?php endif; ?>
 
                 </select>
                 <script>
@@ -131,7 +131,7 @@ try {
                     //value setting only works after the options are defined and php has the value set prior
                     document.forms[0].col.value = "<?php se($col); ?>";
                 </script>
-                <select class="form-control" style="width:auto" name="order" value="<?php se($order); ?>">
+                <select class="form-control" style="width:auto;" name="order" value="<?php se($order); ?>">
                     <option class="bg-white" value="asc">Up</option>
                     <option class="bg-white" value="desc">Down</option>
                 </select>
@@ -145,9 +145,10 @@ try {
                         document.forms[0].order.className = "form-control bg-danger";
                     }
                 </script>
-
+            
+                <div class="input-group-text">Filter</div>
                 <!--- Select categories -->
-                <select class="form-control bg-light" style="width:auto" name="category" value="<?php se($cat);?>">
+                <select class="form-control" style="width:auto;background:#ee8080;" name="category" value="<?php se($cat);?>">
                     <option value="all">All</option>
                     <?php foreach($categories as $category):?>
                         <option value="<?php se($category, 'category');?>">
@@ -158,6 +159,19 @@ try {
                 <script data="this">
                     document.forms[0].category.value = "<?php se($cat); ?>";
                 </script>
+
+                <?php if (has_role("Admin")): ?>
+                     <!--- Select categories -->
+                    <select class="form-control" style="width:auto;background:#178a94;" name="stock" value="<?php se($cat);?>">
+                        <option value="inStock">In Stock</option>
+                        <option value="outofstock">Out of Stock</option>
+                     
+                    </select>
+                    <script data="this">
+                        document.forms[0].stock.value = "<?php se($stock); ?>";
+                    </script>
+
+                <?php endif; ?>
 
 
             </div>
