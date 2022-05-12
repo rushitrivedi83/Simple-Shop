@@ -195,10 +195,53 @@
 		* Prod URL: [https://rat3-prod.herokuapp.com/Project/purchase_history.php](https://rat3-prod.herokuapp.com/Project/purchase_history.php) 
         * For now limit to 10 most recent orders
         * A list item can be clicked to view the full details in the Order Details Page (similar to Order Confirmation Page except no “Thank you” message)
+- Milestone 4
+  * [x] \(05/08/2022) User can set their profile to be public or private (will need another column in Users table)
+    * Link to related .md file: [Milestone4](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone4.md)
+	* Prod URL: [https://rat3-prod.herokuapp.com/Project/profile.php](https://rat3-prod.herokuapp.com/Project/profile.php) 
+    * If profile is public, hide email address from other users (email address should not be publicly visible to others)
+  * [x] \(05/09/2022) User will be able to rate a product they purchased
+    * Link to related .md file: [Milestone4](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone4.md)
+	* Prod URL: [https://rat3-prod.herokuapp.com/Project/product.php?id=1](https://rat3-prod.herokuapp.com/Project/product.php?id=1) 
+    * Create table called Ratings (id, product_id, user_id, rating, comment, created, modified)
+    * 1-5 rating
+    * Text Comment (use TEXT data type in sql)
+    * Must be done on the Product Details Page
+    * Ratings and Rating Comments will be visible on the Product Details page
+      * Show the latest 10 reviews
+      * Paginate anything beyond 10
+      * Show the average rating on the Product Details Page
+  * [x] \(05/12/2022) User’s Purchase History Changes
+    * Link to related .md file: [Milestone4](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone4.md)
+	* Prod URL: [https://rat3-prod.herokuapp.com/Project/purchase_history.php](https://rat3-prod.herokuapp.com/Project/purchase_history.php) 
+    * Filter by date range
+    * Filter by category
+    * Sort by total, date purchased, etc
+    * Add pagination
+      * Any filter/sort applied must be followed during the pagination process
+  * [x] \(05/12/2022) Store Owner Purchase History Changes
+    * Link to related .md file: [Milestone4](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone4.md)
+	* Prod URL: [https://rat3-prod.herokuapp.com/Project/purchase_history.php](https://rat3-prod.herokuapp.com/Project/purchase_history.php) 
+    * Filter by Date Range
+    * Filter by Category
+    * Sort by total, date purchased, etc
+    * Add pagination
+      * Any filter/sort applied must be followed during the pagination process
+    * The result page should show the accurate total price of the combined search results (i.e., if just 3 records show each of $25, it should show $75 total for this view)
+  * [x] \(04/15/2022) Add pagination to Shop Page (and any other product lists not yet mentioned)
+    * Link to related .md file: [Milestone4](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone4.md)
+	* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
+  * [x] \(05/09/2022) Store Owner will be able to see all products out of stock
+    * Link to related .md file: [Milestone4](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone4.md)
+	* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php)
+    * This will be added as a filter to their product list page from Milestone 2
+    * Pagination should account for this new filter
+    * Recommended to have the filter applied as a given value (i.e., where quantity is <= value)
+  * [x] \(05/09/2022) User can sort products by average rating on the Shop Page
+    * Hint: may want to add an “average rating” field to the Products table and update this value any time a new rating is given for the product using an aggregate function
+    * Link to related .md file: [Milestone4](https://github.com/rushitrivedi83/IT202-008/blob/Milestone3/public_html/Project/milestone4.md)
+	* Prod URL: [https://rat3-prod.herokuapp.com/Project/shop.php](https://rat3-prod.herokuapp.com/Project/shop.php) 
 
-
-
- 
 
 
 

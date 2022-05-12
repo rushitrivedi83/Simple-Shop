@@ -51,7 +51,7 @@ if ( isset($_POST["address"]) && strlen($_POST["address"]) > 0) {
 			foreach ($results as $row) {
 				$total_cost += (float)se($row, "subtotal", 0, false);
 			}
-			if ($balance >= $total_cost) {
+			if ($balance + 0.01 >= $total_cost) {
 				//can purchase
 				$db->beginTransaction();
 				$stmt = $db->prepare("SELECT max(id) as order_id FROM Orders");
