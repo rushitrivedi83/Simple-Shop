@@ -66,7 +66,12 @@ if (has_role("Admin")) {
 
 	//apply column and order sort
 	if (!empty($col) && !empty($order)) {
-		$query .= " ORDER BY $col $order"; 
+		if($col == "created") {
+			$query .= " ORDER BY Orders.created $order"; 	
+		} else {
+			$query .= " ORDER BY $col $order"; 
+		}
+		
 	}
 
 	$query .= " LIMIT :offset, :count";

@@ -17,7 +17,7 @@ if (isset($_POST["submit"])) {
 $result = [];
 $columns = get_columns($TABLE_NAME);
 //echo "<pre>" . var_export($columns, true) . "</pre>";
-$ignore = ["id", "modified", "created"];
+$ignore = ["id", "modified", "created", "avg_rating"];
 $db = getDB();
 //get the item
 $id = se($_GET, "id", -1, false);
