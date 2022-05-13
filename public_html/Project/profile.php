@@ -152,7 +152,7 @@ try {
                     <div class="form-check form-switch">
                         <input <?php if ($isVisible) {
                                     echo "checked";
-                                } ?> class="form-check-input" type="checkbox" role="switch" id="vis" name="vis">
+                                } ?> class="form-check-input" type="checkbox" role="switch" id="visibility" name="visibility">
                         <label class="form-check-label" for="vis">Toggle Visibility</label>
                     </div>
                 </div>
